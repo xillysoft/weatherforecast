@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "ViewController.h"
+#import "ZZCityListViewController.h"
 
 
 @interface AppDelegate ()
@@ -16,12 +17,24 @@
 
 @implementation AppDelegate
 
+-(void)cityDidSelectWithId:(NSString *)cityId cityName:(NSString *)cityName
+{
+    ViewController *viewController = [[ViewController alloc] init];
+    [viewController setCityId:cityId];
+    [viewController setCityName:cityName];
+    [self.window.rootViewController showViewController:viewController sender:self];
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     CGRect frame = [[UIScreen mainScreen] bounds];
     self.window = [[UIWindow alloc] initWithFrame:frame];
-    ViewController *viewController = [[ViewController alloc] init];
+    self.window.backgroundColor = [UIColor whiteColor];
+    
+//    ViewController *viewController = [[ViewController alloc] init];
+    ZZCityListViewController *viewController = [[ZZCityListViewController alloc] init];
+    viewController.delegate = self;
+    
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
     [navigationController setNavigationBarHidden:YES];
     [self.window setRootViewController:navigationController];

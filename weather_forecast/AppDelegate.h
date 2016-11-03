@@ -11,7 +11,7 @@
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
-
+-(void)cityDidSelectWithId:(NSString *)cityId cityName:(NSString *)cityName;
 
 @end
 

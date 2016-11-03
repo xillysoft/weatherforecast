@@ -9,11 +9,12 @@
 #import <UIKit/UIKit.h>
 
 @interface ZZWeatherNowView : UIView
-@property(readwrite, nonatomic) NSString *weatherConditionText;
-@property(readwrite, nonatomic) NSString *weatherConditionCode;
-@property(readwrite, nonatomic) NSInteger weatherTemperature;
-@property(readwrite, nonatomic) NSDate *lastUpdated;
 
-@property(readwrite, nonatomic) NSString *windDir;
-@property(readwrite, nonatomic) NSString *windSC;
+-(void)setLastUpdated:(NSDate *)date;
+-(void)setWeatherConditionText:(NSString *)text code:(NSString *)code;
+-(void)setWeatherTemperature:(NSNumber *)temp;
+-(void)setWeatherWindDir:(NSString *)dir SC:(NSString *)sc;
+
+-(void)setAQI:(NSNumber *)aqiIndex quality:(NSString *)quality pm25:(NSString *)pm25 pm10:(NSString *)pm10;
+
 @end

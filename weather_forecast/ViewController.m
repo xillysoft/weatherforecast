@@ -17,6 +17,7 @@
 }
 
 @property ZZWeatherDataProvider *weatherData;
+
 @property ZZWeatherNowView *weatherNowView;
 @property NSMutableArray<ZZWeatherDayForecastView *> *forecastViews;
 
@@ -62,12 +63,12 @@
         for(int i=0; i<7; i++){
             ZZWeatherDayForecastView *forecastView = self.forecastViews[i];
             forecastView.translatesAutoresizingMaskIntoConstraints = NO;
-            //self.forecastViews[i].top = self.weatherNowView.bottom+15 or self.forecastViews[i-1].bottom+5
+            //self.forecastViews[i].top = self.weatherNowView.bottom+15 or self.forecastViews[i-1].bottom+20
             if(i == 0){
                 [self.view addConstraint:[NSLayoutConstraint constraintWithItem:forecastView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.weatherNowView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:15]];
             }else{
 //                [self.view addConstraint:[NSLayoutConstraint constraintWithItem:forecastView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.forecastViews[i-1] attribute:NSLayoutAttributeBottom multiplier:1.0 constant:10]];
-                [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.forecastViews[i] attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.forecastViews[i-1] attribute:NSLayoutAttributeBottom multiplier:1.0 constant:5]];
+                [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.forecastViews[i] attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.forecastViews[i-1] attribute:NSLayoutAttributeBottom multiplier:1.0 constant:20]];
             }
             //self.forecastViews[6].bottom = superview.bottom
             if(i == 7-1){
@@ -93,11 +94,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    NSString *cityId = @"CN101080101";
     NSString *authKey = @"abb4394c4a8441159cd794ecaa7b5ef2";
+    NSString *cityId = self.cityId ? self.cityId : @"CN101080101";
     self.weatherData = [[ZZWeatherDataProvider alloc] initWithCityId:cityId authKey:authKey];
     self.weatherData.delegate = self;
     [self.weatherData requestWeatherData];
+    
+    [self.navigationController setNavigationBarHidden:NO];
+    [self setTitle:self.cityName];
 }
 
 -(void)viewWillLayoutSubviews
@@ -132,6 +136,13 @@
 -(void)weatherDataDidReceiveAQI:(NSDictionary *)aqi sender:(ZZWeatherDataProvider *)sender
 {
 //    NSLog(@"WeatherDataProvider:: Received AQI! \n\taqi=%@", aqi);
+    
+    NSString *aqiIndexString = [aqi objectForKey:@"aqi"];
+    NSNumber *aqiIndex = @([aqiIndexString intValue]);
+    NSString *aqiQuality = [aqi objectForKey:@"qlty"];
+    NSString *aqiPM25 = [aqi objectForKey:@"pm25"];
+    NSString *aqiPM10 = [aqi objectForKey:@"pm10"];
+    [self.weatherNowView setAQI:aqiIndex quality:aqiQuality pm25:aqiPM25 pm10:aqiPM10];
 }
 -(void)weatherDataDidReceivSuggestion:(NSDictionary *)suggestion sender:(ZZWeatherDataProvider *)sender
 {
@@ -148,12 +159,10 @@
     NSString *windDir = [[weatherNow objectForKey:@"wind"] objectForKey:@"dir"];
     NSString *windSC = [[weatherNow objectForKey:@"wind"] objectForKey:@"sc"];
     
-    [self.weatherNowView setWeatherConditionCode:conditionCode];
-    [self.weatherNowView setWeatherConditionText:conditionText];
-    [self.weatherNowView setWeatherTemperature:[temp integerValue]];
-    [self.weatherNowView setWindDir:windDir];
-    [self.weatherNowView setWindSC:windSC];
     [self.weatherNowView setLastUpdated:sender.dateLastUpdated];
+    [self.weatherNowView setWeatherConditionText:conditionText code:conditionCode];
+    [self.weatherNowView setWeatherTemperature:@([temp intValue])];
+    [self.weatherNowView setWeatherWindDir:windDir SC:windSC];
     
 }
 
@@ -189,7 +198,7 @@
 //        [outFormatter setTimeStyle:NSDateFormatterNoStyle];
         
         [formatterOut setLocale:[NSLocale currentLocale]];
-        NSLog(@"--%d:[%@]: %@-->%@, %@~%@C", i, [formatterOut stringFromDate:forecastDate], cond_txt_d, cond_txt_n, tmp_max, tmp_min);
+//        NSLog(@"--%d:[%@]: %@-->%@, %@~%@C", i, [formatterOut stringFromDate:forecastDate], cond_txt_d, cond_txt_n, tmp_max, tmp_min);
     }
     
 }

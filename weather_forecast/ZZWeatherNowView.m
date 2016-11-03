@@ -9,6 +9,18 @@
 #import "ZZWeatherNowView.h"
 
 @interface ZZWeatherNowView(){
+    NSDate *_lastUpdated;
+    NSString *_weatherConditionText;
+    NSString *_weatherConditionCode;
+    NSNumber *_weatherTemperature;
+    NSString *_windDir;
+    NSString *_windSC;
+    
+    NSNumber *_aqiIndex;
+    NSString *_aqiQuality;
+    NSString *_aqiPM25;
+    NSString *_aqiPM10;
+    
     NSLayoutConstraint *_weatherConditionImageSizeConstaint;
 }
 @property UIImageView *conditionImageView;
@@ -26,15 +38,6 @@
 -(instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
-    if(self){
-        [self setupViews];
-    }
-    return self;
-}
-
--(instancetype)initWithCoder:(NSCoder *)aDecoder
-{
-    self = [super initWithCoder:aDecoder];
     if(self){
         [self setupViews];
     }
@@ -117,13 +120,13 @@
     
     //8: self.conditionTextLabel.left = self.temperatureLabel.left
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.conditionTextLabel attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.temperatureLabel attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
-    //self.conditionTextLabel.right = superview.right-5
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.conditionTextLabel attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.conditionTextLabel.superview attribute:NSLayoutAttributeRight multiplier:1.0 constant:-5]];
+    //self.conditionTextLabel.right = self.temperatureLabel.right
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.conditionTextLabel attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.temperatureLabel attribute:NSLayoutAttributeRight multiplier:1.0 constant:0]];
     
     //9: self.lastUpdatedLabel.left = self.coditionTextLabel.left
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.lastUpdatedLabel attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.conditionTextLabel attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
-    //self.lastUpdatedLabel.right = superview.right-5
-    [self addConstraint: [NSLayoutConstraint constraintWithItem:self.lastUpdatedLabel attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.lastUpdatedLabel.superview attribute:NSLayoutAttributeRight multiplier:1.0 constant:-5]];
+    //self.lastUpdatedLabel.right = self.temperatureLabel.right
+    [self addConstraint: [NSLayoutConstraint constraintWithItem:self.lastUpdatedLabel attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.temperatureLabel attribute:NSLayoutAttributeRight multiplier:1.0 constant:0]];
     
     
     //6: self.windDirLabel.right = self.conditionImage.right
@@ -163,21 +166,11 @@
     return YES;
 }
 
--(void)setWeatherConditionCode:(NSString *)weatherConditionCode
-{
-    _weatherConditionCode = weatherConditionCode;
-    NSString *path = [[NSBundle mainBundle] pathForResource:weatherConditionCode ofType:@"png"];
-    self.conditionImageView.image = [UIImage imageNamed:path];
-    self.conditionImageView.tintColor = [UIColor grayColor];
-}
-
--(void)setWeatherConditionText:(NSString *)weatherConditionText
-{
-    _weatherConditionText = weatherConditionText;
-    self.conditionTextLabel.text = weatherConditionText;
-}
 -(void)setLastUpdated:(NSDate *)lastUpdated
 {
+    if(lastUpdated == nil){
+        return ;
+    }
     _lastUpdated = lastUpdated;
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     formatter.locale = [NSLocale currentLocale];
@@ -191,11 +184,35 @@
     
 }
 
--(void)setWeatherTemperature:(NSInteger)weatherTemperature
+-(void)setWeatherConditionText:(NSString *)text code:(NSString *)code
+{
+    _weatherConditionText = text;
+    _weatherConditionCode = code;
+    self.conditionTextLabel.text = text;
+    self.conditionTextLabel.font = [UIFont boldSystemFontOfSize:32];
+    if(code != nil){
+        NSString *path = [[NSBundle mainBundle] pathForResource:code ofType:@"png"];
+        self.conditionImageView.image = [UIImage imageNamed:path];
+        self.conditionImageView.tintColor = [UIColor grayColor];
+        BOOL imageShadowed = YES;
+        if(imageShadowed){
+            CALayer *layer = [self.conditionImageView layer];
+            layer.shadowColor = [[UIColor grayColor] CGColor];
+            layer.shadowOffset = CGSizeMake(5, 5);
+            layer.shadowRadius = 8;
+            layer.shadowOpacity = 0.75;
+        }
+        
+    }
+}
+
+
+
+-(void)setWeatherTemperature:(NSNumber *)weatherTemperature
 {
     _weatherTemperature = weatherTemperature;
     [self.temperatureLabel setAttributedText:({
-        NSString *tempString0 = [NSString stringWithFormat:@"%ld", (long)weatherTemperature];
+        NSString *tempString0 = weatherTemperature==nil ? @"N/A" : [NSString stringWithFormat:@"%d", [weatherTemperature intValue]];
         NSString *tempString1 = @"°C";
         NSString *tempString = [tempString0 stringByAppendingString:tempString1];
         NSMutableAttributedString *as = [[NSMutableAttributedString alloc] initWithString:tempString];
@@ -204,6 +221,14 @@
         UIFont *font1 = [UIFont boldSystemFontOfSize:32];
         [as addAttribute:NSFontAttributeName value:font0 range:NSMakeRange(0, [tempString length])];
         [as addAttribute:NSFontAttributeName value:font1 range:NSMakeRange([tempString0 length], [tempString1 length])];
+        NSShadow *shadow = ({
+            NSShadow *shadow = [[NSShadow alloc] init];
+            shadow.shadowOffset = CGSizeMake(3, 3);
+            shadow.shadowColor = [UIColor lightGrayColor];
+            shadow.shadowBlurRadius = 6;
+            shadow;
+        });
+        [as addAttribute:NSShadowAttributeName value:shadow range:NSMakeRange(0, [tempString length])];
         NSNumber *offsetAmount = @([font0 capHeight] - [font1 capHeight]);
         [as addAttribute:NSBaselineOffsetAttributeName value:offsetAmount range:NSMakeRange([tempString0 length], [tempString1 length])];
         
@@ -214,26 +239,37 @@
     
 }
 
--(void)setWindDir:(NSString *)windDir
+-(void)setWeatherWindDir:(NSString *)dir SC:(NSString *)sc
 {
-    _windDir = windDir;
+    _windDir = dir;
+    _windSC = sc;
     [self.windDirLabel setAttributedText:({
-        [[NSAttributedString alloc] initWithString:windDir
+        [[NSAttributedString alloc] initWithString:dir
+                                        attributes:@{NSFontAttributeName: [UIFont boldSystemFontOfSize:20],
+                                                     NSForegroundColorAttributeName: [UIColor grayColor]}];
+    })];
+    [self.windSCLabel setAttributedText:({
+        [[NSAttributedString alloc] initWithString:sc
                                         attributes:@{NSFontAttributeName: [UIFont boldSystemFontOfSize:20],
                                                      NSForegroundColorAttributeName: [UIColor grayColor]}];
     })];
 }
 
--(void)setWindSC:(NSString *)windSC
+
+/*!
+ * AQI (air quality index)
+ */
+-(void)setAQI:(NSNumber *)aqiIndex quality:(NSString *)quality pm25:(NSString *)pm25 pm10:(NSString *)pm10
 {
-    _windSC = windSC;
-    [self.windSCLabel setAttributedText:({
-        [[NSAttributedString alloc] initWithString:windSC
-                                        attributes:@{NSFontAttributeName: [UIFont boldSystemFontOfSize:20],
-                                                     NSForegroundColorAttributeName: [UIColor grayColor]}];
-    })];
+    _aqiIndex = aqiIndex;
+    _aqiQuality = quality;
+    _aqiPM25 = pm25;
+    _aqiPM10 = pm10;
+//    NSLog(@"--AQI: %@, qlty=%@, pm25=%@, pm10=%@", aqiIndex, quality, pm25, pm10);
     
+    //TODO: setting AQI views's contents
 }
+
 /*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.

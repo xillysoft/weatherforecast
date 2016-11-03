@@ -49,7 +49,7 @@
     self.temperatureLabel = [[UILabel alloc] init];
     self.windLabel = [[UILabel alloc] init];
     [self addSubview:self.conditionDayImageView];
-    self.conditionDayImageView.tintColor = [UIColor grayColor];
+    self.conditionDayImageView.tintColor = [UIColor lightGrayColor];
     [self addSubview:self.conditionNightImageView];
     self.conditionNightImageView.tintColor = [UIColor lightGrayColor];
     [self addSubview:self.conditionDayLabel];
@@ -90,10 +90,10 @@
 
     self.temperatureLabel.translatesAutoresizingMaskIntoConstraints = NO;
     //temperatureLabel.centerY = conditionNightImageView.centerY
-    //temperatureLabel.left = conditionNightImageView.right+20
+    //temperatureLabel.left = conditionNightImageView.right+30
     //temperatureLabel.right = superview.right-10
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.temperatureLabel attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.conditionNightImageView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.temperatureLabel attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.conditionNightImageView attribute:NSLayoutAttributeRight multiplier:1.0 constant:20]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.temperatureLabel attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.conditionNightImageView attribute:NSLayoutAttributeRight multiplier:1.0 constant:30]];
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.temperatureLabel attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1.0 constant:-10]];
     
     self.windLabel.translatesAutoresizingMaskIntoConstraints = NO;
@@ -106,9 +106,9 @@
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.windLabel attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1.0 constant:-10]];
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.windLabel attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationLessThanOrEqual toItem:self.conditionDayLabel attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0]];
     
-    //conditionDayImageView.width = 50;
+    //conditionDayImageView.width = 40;
     NSLayoutConstraint *c1 = [NSLayoutConstraint constraintWithItem:self.conditionDayImageView attribute:
-                              NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:50];
+                              NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:40];
     c1.priority = UILayoutPriorityDefaultHigh;
     [self addConstraint:c1];
     //conditionDayImageView.height = conditionDayImageView.width
@@ -122,6 +122,8 @@
     [self.conditionNightImageView setContentHuggingPriority:UILayoutPriorityDefaultHigh forAxis:UILayoutConstraintAxisHorizontal];
     
     //Content Compression Resistance/Hugging priority
+    [self.conditionDayImageView setContentHuggingPriority:UILayoutPriorityDefaultHigh forAxis:UILayoutConstraintAxisHorizontal];
+    [self.conditionNightImageView setContentHuggingPriority:UILayoutPriorityDefaultHigh forAxis:UILayoutConstraintAxisHorizontal];
     [self.temperatureLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [self.windLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
 //    self.temperatureLabel.adjustsFontSizeToFitWidth = YES;
@@ -182,7 +184,8 @@
     
     NSString *windString = [NSString stringWithFormat:@"%@ %@", windDir, windSC];
     [self.windLabel setAttributedText:({
-        [[NSAttributedString alloc] initWithString:windString attributes:@{NSForegroundColorAttributeName: [UIColor lightGrayColor]}];
+        [[NSAttributedString alloc] initWithString:windString
+                                        attributes:@{NSForegroundColorAttributeName: [UIColor lightGrayColor]}];
     })];
 }
 

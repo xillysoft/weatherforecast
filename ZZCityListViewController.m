@@ -204,7 +204,7 @@
         if([self respondsToSelector:@selector(tableView:viewForHeaderInSection:)]){
             UIView *view = [self tableView:tableView viewForHeaderInSection:0];
             CGSize size = [view systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
-            NSLog(@"--tableView:heightForHeaderInSectin:%d --> %@", section, NSStringFromCGSize(size));
+            NSLog(@"--tableView:heightForHeaderInSecting:%@ --> %@", @(section), NSStringFromCGSize(size));
             cachedHeight = @(size.height);
         }else{
             cachedHeight = @(20);

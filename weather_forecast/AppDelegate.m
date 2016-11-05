@@ -26,6 +26,7 @@
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    
     // Override point for customization after application launch.
     CGRect frame = [[UIScreen mainScreen] bounds];
     self.window = [[UIWindow alloc] initWithFrame:frame];
@@ -39,6 +40,7 @@
     [navigationController setNavigationBarHidden:YES];
     [self.window setRootViewController:navigationController];
     [self.window makeKeyAndVisible];
+    
     return YES;
 }
 

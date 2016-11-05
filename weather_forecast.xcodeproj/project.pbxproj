@@ -69,13 +69,15 @@
 		612FA5F91DC5A6C100648D17 /* 999.png in Resources */ = {isa = PBXBuildFile; fileRef = 612FA5C41DC5A6C100648D17 /* 999.png */; };
 		612FA5FA1DC5A6C100648D17 /* __weather_icons.json in Resources */ = {isa = PBXBuildFile; fileRef = 612FA5C51DC5A6C100648D17 /* __weather_icons.json */; };
 		612FA5FD1DC8C86900648D17 /* ZZWeatherDayForecastView.m in Sources */ = {isa = PBXBuildFile; fileRef = 612FA5FC1DC8C86900648D17 /* ZZWeatherDayForecastView.m */; };
-		612FA5FF1DC8CB9600648D17 /* View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 612FA5FE1DC8CB9600648D17 /* View.xib */; };
-		612FA6011DCB138C00648D17 /* View2.xib in Resources */ = {isa = PBXBuildFile; fileRef = 612FA6001DCB138B00648D17 /* View2.xib */; };
 		612FA6041DCB187700648D17 /* ZZCityListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 612FA6031DCB187700648D17 /* ZZCityListViewController.m */; };
 		612FA60C1DCB8A3B00648D17 /* icon_wind.png in Resources */ = {isa = PBXBuildFile; fileRef = 612FA60A1DCB8A3B00648D17 /* icon_wind.png */; };
 		612FA60F1DCB8DB000648D17 /* icon_pop.png in Resources */ = {isa = PBXBuildFile; fileRef = 612FA60E1DCB8DB000648D17 /* icon_pop.png */; };
 		612FA6111DCB903D00648D17 /* icon_humidity.png in Resources */ = {isa = PBXBuildFile; fileRef = 612FA6101DCB903D00648D17 /* icon_humidity.png */; };
 		612FA6131DCBA77D00648D17 /* citylist_allchina.json in Resources */ = {isa = PBXBuildFile; fileRef = 612FA6121DCBA77D00648D17 /* citylist_allchina.json */; };
+		612FA6151DCC76BE00648D17 /* ZZForecastView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 612FA6141DCC76BE00648D17 /* ZZForecastView.xib */; };
+		612FA6181DCC76EC00648D17 /* ZZForecastView.m in Sources */ = {isa = PBXBuildFile; fileRef = 612FA6171DCC76EC00648D17 /* ZZForecastView.m */; };
+		612FA61D1DCC78AA00648D17 /* ZZCircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 612FA61C1DCC78AA00648D17 /* ZZCircleView.m */; };
+		612FA6211DCDE0D600648D17 /* icon_humidity_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 612FA6201DCDE0D600648D17 /* icon_humidity_1.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -149,14 +151,18 @@
 		612FA5C51DC5A6C100648D17 /* __weather_icons.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = __weather_icons.json; sourceTree = "<group>"; };
 		612FA5FB1DC8C86900648D17 /* ZZWeatherDayForecastView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZZWeatherDayForecastView.h; sourceTree = "<group>"; };
 		612FA5FC1DC8C86900648D17 /* ZZWeatherDayForecastView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZZWeatherDayForecastView.m; sourceTree = "<group>"; };
-		612FA5FE1DC8CB9600648D17 /* View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = View.xib; path = weather_forecast/View.xib; sourceTree = "<group>"; };
-		612FA6001DCB138B00648D17 /* View2.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = View2.xib; sourceTree = "<group>"; };
 		612FA6021DCB187700648D17 /* ZZCityListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZZCityListViewController.h; path = ../ZZCityListViewController.h; sourceTree = "<group>"; };
 		612FA6031DCB187700648D17 /* ZZCityListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZZCityListViewController.m; path = ../ZZCityListViewController.m; sourceTree = "<group>"; };
 		612FA60A1DCB8A3B00648D17 /* icon_wind.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_wind.png; sourceTree = "<group>"; };
 		612FA60E1DCB8DB000648D17 /* icon_pop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_pop.png; sourceTree = "<group>"; };
 		612FA6101DCB903D00648D17 /* icon_humidity.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_humidity.png; sourceTree = "<group>"; };
 		612FA6121DCBA77D00648D17 /* citylist_allchina.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = citylist_allchina.json; sourceTree = "<group>"; };
+		612FA6141DCC76BE00648D17 /* ZZForecastView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ZZForecastView.xib; sourceTree = "<group>"; };
+		612FA6161DCC76EC00648D17 /* ZZForecastView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZZForecastView.h; sourceTree = "<group>"; };
+		612FA6171DCC76EC00648D17 /* ZZForecastView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZZForecastView.m; sourceTree = "<group>"; };
+		612FA61B1DCC78AA00648D17 /* ZZCircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZZCircleView.h; sourceTree = "<group>"; };
+		612FA61C1DCC78AA00648D17 /* ZZCircleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZZCircleView.m; sourceTree = "<group>"; };
+		612FA6201DCDE0D600648D17 /* icon_humidity_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_humidity_1.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -173,8 +179,6 @@
 		612FA55E1DC3452500648D17 = {
 			isa = PBXGroup;
 			children = (
-				612FA6001DCB138B00648D17 /* View2.xib */,
-				612FA5FE1DC8CB9600648D17 /* View.xib */,
 				612FA5691DC3452500648D17 /* weather_forecast */,
 				612FA5681DC3452500648D17 /* Products */,
 			);
@@ -191,6 +195,7 @@
 		612FA5691DC3452500648D17 /* weather_forecast */ = {
 			isa = PBXGroup;
 			children = (
+				612FA6191DCC788F00648D17 /* utilities */,
 				612FA5811DC3465900648D17 /* weather */,
 				612FA56D1DC3452500648D17 /* AppDelegate.h */,
 				612FA56E1DC3452500648D17 /* AppDelegate.m */,
@@ -242,6 +247,9 @@
 				612FA5FC1DC8C86900648D17 /* ZZWeatherDayForecastView.m */,
 				612FA6021DCB187700648D17 /* ZZCityListViewController.h */,
 				612FA6031DCB187700648D17 /* ZZCityListViewController.m */,
+				612FA6141DCC76BE00648D17 /* ZZForecastView.xib */,
+				612FA6161DCC76EC00648D17 /* ZZForecastView.h */,
+				612FA6171DCC76EC00648D17 /* ZZForecastView.m */,
 				612FA58F1DC5A67B00648D17 /* icons */,
 			);
 			name = weather_ui;
@@ -252,6 +260,7 @@
 			children = (
 				612FA60A1DCB8A3B00648D17 /* icon_wind.png */,
 				612FA60E1DCB8DB000648D17 /* icon_pop.png */,
+				612FA6201DCDE0D600648D17 /* icon_humidity_1.png */,
 				612FA6101DCB903D00648D17 /* icon_humidity.png */,
 				612FA5901DC5A6C100648D17 /* weather_cond_icons */,
 			);
@@ -326,6 +335,23 @@
 			name = resources;
 			sourceTree = "<group>";
 		};
+		612FA6191DCC788F00648D17 /* utilities */ = {
+			isa = PBXGroup;
+			children = (
+				612FA61A1DCC789A00648D17 /* UI */,
+			);
+			name = utilities;
+			sourceTree = "<group>";
+		};
+		612FA61A1DCC789A00648D17 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				612FA61B1DCC78AA00648D17 /* ZZCircleView.h */,
+				612FA61C1DCC78AA00648D17 /* ZZCircleView.m */,
+			);
+			name = UI;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -389,7 +415,6 @@
 				612FA60C1DCB8A3B00648D17 /* icon_wind.png in Resources */,
 				612FA5C71DC5A6C100648D17 /* 101.png in Resources */,
 				612FA5D31DC5A6C100648D17 /* 208.png in Resources */,
-				612FA6011DCB138C00648D17 /* View2.xib in Resources */,
 				612FA5CC1DC5A6C100648D17 /* 201.png in Resources */,
 				612FA5D71DC5A6C100648D17 /* 212.png in Resources */,
 				612FA5D41DC5A6C100648D17 /* 209.png in Resources */,
@@ -410,10 +435,10 @@
 				612FA5CE1DC5A6C100648D17 /* 203.png in Resources */,
 				612FA5F11DC5A6C100648D17 /* 502.png in Resources */,
 				612FA5DC1DC5A6C100648D17 /* 303.png in Resources */,
+				612FA6151DCC76BE00648D17 /* ZZForecastView.xib in Resources */,
 				612FA5D91DC5A6C100648D17 /* 300.png in Resources */,
 				612FA5771DC3452500648D17 /* Assets.xcassets in Resources */,
 				612FA5E81DC5A6C100648D17 /* 401.png in Resources */,
-				612FA5FF1DC8CB9600648D17 /* View.xib in Resources */,
 				612FA5D01DC5A6C100648D17 /* 205.png in Resources */,
 				612FA5F51DC5A6C100648D17 /* 507.png in Resources */,
 				612FA5D11DC5A6C100648D17 /* 206.png in Resources */,
@@ -421,6 +446,7 @@
 				612FA5EB1DC5A6C100648D17 /* 404.png in Resources */,
 				612FA5E61DC5A6C100648D17 /* 313.png in Resources */,
 				612FA5C81DC5A6C100648D17 /* 102.png in Resources */,
+				612FA6211DCDE0D600648D17 /* icon_humidity_1.png in Resources */,
 				612FA5EE1DC5A6C100648D17 /* 407.png in Resources */,
 				612FA5EF1DC5A6C100648D17 /* 500.png in Resources */,
 				612FA5F81DC5A6C100648D17 /* 901.png in Resources */,
@@ -456,7 +482,9 @@
 			files = (
 				612FA5871DC35DAB00648D17 /* ZZWeather.m in Sources */,
 				612FA5841DC346A500648D17 /* ZZWeatherDataProvider.m in Sources */,
+				612FA61D1DCC78AA00648D17 /* ZZCircleView.m in Sources */,
 				612FA5FD1DC8C86900648D17 /* ZZWeatherDayForecastView.m in Sources */,
+				612FA6181DCC76EC00648D17 /* ZZForecastView.m in Sources */,
 				612FA58C1DC36A7100648D17 /* ZZWeatherNowView.m in Sources */,
 				612FA5721DC3452500648D17 /* ViewController.m in Sources */,
 				612FA6041DCB187700648D17 /* ZZCityListViewController.m in Sources */,

@@ -9,15 +9,18 @@
 #import "ZZWeatherDayForecastView.h"
 
 @interface ZZWeatherDayForecastView(){
-    NSDate *_forecastDate;
-    NSString *_dayCode;
-    NSString *_dayText;
-    NSString *_nightCode;
-    NSString *_nightText;
-    NSNumber *_tempMin;
-    NSNumber *_tempMax;
-    NSString *_windDir;
-    NSString *_windSC;
+    NSDate *_forecastDate; //发布日期
+    NSString *_dayCode; //天气状况代码－白天
+    NSString *_dayText; //天气状况－白天
+    NSString *_nightCode; //天气状况代码－夜间
+    NSString *_nightText; //天气状况－夜间
+    NSNumber *_tempMax; //最高气温
+    NSNumber *_tempMin; //最低气温
+    NSString *_windDir; //风向
+    NSString *_windSC; //风力等级
+    NSNumber *_windSpd; //风速
+    NSNumber *_PoP; //probability of precipitation %
+    NSNumber *_humidity; //humidity %
 }
 
 @property UIImageView *conditionDayImageView;
@@ -139,6 +142,9 @@
     _forecastDate = date;
 }
 
+/*!
+ * nightCode, nightText may be nil.
+ */
 -(void)setConditionDayCode:(NSString *)dayCode dayText:(NSString *)dayText nightCode:(NSString *)nightCode nightText:(NSString *)nightText
 {
     _dayCode = dayCode;
@@ -155,10 +161,13 @@
     
 }
 
+/*!
+ * hight temperature, low temperature
+ */
 -(void)setTemperatureMax:(NSNumber *)maxTemp min:(NSNumber *)minTemp
 {
-    _tempMin = minTemp;
     _tempMax = maxTemp;
+    _tempMin = minTemp;
     NSString *maxTempString = [maxTemp stringValue];
     NSString *minTempString = [minTemp stringValue];
     NSString *tempString1 = [NSString stringWithFormat:@"%@~%@", maxTempString, minTempString];
@@ -177,10 +186,14 @@
     })];
 }
 
--(void)setWindDir:(NSString *)windDir SC:(NSString *)windSC
+/*!
+ * wind direction, scale, speed(kMPH)
+ */
+-(void)setWindDir:(NSString *)windDir scale:(NSString *)windSC speed:(NSNumber *)windSpd
 {
     _windDir = windDir;
     _windSC = windSC;
+    _windSpd = windSpd;
     
     NSString *windString = [NSString stringWithFormat:@"%@ %@", windDir, windSC];
     [self.windLabel setAttributedText:({
@@ -189,6 +202,23 @@
     })];
 }
 
+/*!
+ * probability of precipitation %
+ */
+-(void)setPoP:(NSNumber *)pop
+{
+    _PoP = pop;
+
+}
+
+/*!
+ * humidity %
+ */
+-(void)setHumidity:(NSNumber *)humidity
+{
+    _humidity = humidity;
+    
+}
 
 
 /*

@@ -190,7 +190,14 @@
         
         NSString *wind_dir = [[dayForecast objectForKey:@"wind"] objectForKey:@"dir"];
         NSString *wind_sc = [[dayForecast objectForKey:@"wind"] objectForKey:@"sc"];
-        [forecastView setWindDir:wind_dir SC:wind_sc];
+        NSString *wind_spd = [[dayForecast objectForKey:@"wind"] objectForKey:@"spd"];
+        NSNumber *windSpd = wind_spd ? [NSNumber numberWithInteger:[wind_spd integerValue]] : nil;
+        [forecastView setWindDir:wind_dir scale:wind_sc speed:windSpd];
+        
+        NSString *PoP = [dayForecast objectForKey:@"pop"];
+        NSString *hum = [dayForecast objectForKey:@"hum"];
+        [forecastView setPoP:PoP ? [NSNumber numberWithInteger:[PoP integerValue]] : nil];
+        [forecastView setHumidity:hum ? [NSNumber numberWithInteger:[hum integerValue]] : nil];
         
         NSDateFormatter *formatterOut = [[NSDateFormatter alloc] init];
         [formatterOut setDateFormat:@"M-d EEEE"];

@@ -9,7 +9,7 @@
 #import "ViewController.h"
 #import "ZZWeatherDataProvider.h"
 #import "ZZWeatherNowView.h"
-#import "ZZWeatherDayForecastView.h"
+#import "ZZForecastView.h"
 
 @interface ViewController () <ZZWeatherDataProviderDelegate> {
     NSLayoutConstraint *_topLayoutConstraint;
@@ -19,7 +19,7 @@
 @property ZZWeatherDataProvider *weatherData;
 
 @property ZZWeatherNowView *weatherNowView;
-@property NSMutableArray<ZZWeatherDayForecastView *> *forecastViews;
+@property NSMutableArray<ZZForecastView *> *forecastViews;
 
 @end
 
@@ -27,15 +27,21 @@
 
 -(void)loadView
 {
+    UIColor *backgroundColor = [UIColor colorWithRed:0.15 green:0.15 blue:0.15 alpha:1.0];
+    
     UIView *container = [[UIScrollView alloc] initWithFrame:CGRectZero];
-    container.backgroundColor = [UIColor whiteColor];
+    container.backgroundColor = backgroundColor;
     
     self.weatherNowView = [[ZZWeatherNowView alloc] initWithFrame:CGRectZero];
     [container addSubview:self.weatherNowView];
     
     self.forecastViews = [NSMutableArray array];
     for(int i=0; i<7; i++){
-        ZZWeatherDayForecastView *forecastView = [[ZZWeatherDayForecastView alloc] initWithFrame:CGRectZero];
+        ZZForecastView *forecastView = (ZZForecastView *)[[[NSBundle mainBundle] loadNibNamed:@"ZZForecastView"
+                                                                      owner:nil
+                                                                    options:nil] firstObject];
+//        forecastView.backgroundColor = i%2==0 ?  backgroundColor : [UIColor blackColor];
+        forecastView.backgroundColor = backgroundColor;
         [self.forecastViews addObject:forecastView];
         [container addSubview:forecastView];
     }
@@ -60,15 +66,28 @@
         [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.weatherNowView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.weatherNowView.superview attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
         [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.weatherNowView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.weatherNowView.superview attribute:NSLayoutAttributeWidth multiplier:1.0 constant:0]];
         
+        const CGFloat paddingBetweenForecastViews = 20;
+        
         for(int i=0; i<7; i++){
-            ZZWeatherDayForecastView *forecastView = self.forecastViews[i];
+            ZZForecastView *forecastView = self.forecastViews[i];
+            
             forecastView.translatesAutoresizingMaskIntoConstraints = NO;
             //self.forecastViews[i].top = self.weatherNowView.bottom+15 or self.forecastViews[i-1].bottom+20
-            if(i == 0){
+            if(i == 0){//for forecastView[0]
+                //forecastView.top == weatherNowView.bottom
                 [self.view addConstraint:[NSLayoutConstraint constraintWithItem:forecastView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.weatherNowView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:15]];
-            }else{
-//                [self.view addConstraint:[NSLayoutConstraint constraintWithItem:forecastView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.forecastViews[i-1] attribute:NSLayoutAttributeBottom multiplier:1.0 constant:10]];
-                [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.forecastViews[i] attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.forecastViews[i-1] attribute:NSLayoutAttributeBottom multiplier:1.0 constant:20]];
+            }else{ //i≥1
+                //forecastViews[i].top == forecastViews[i-1].to + padding
+                [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.forecastViews[i] attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.forecastViews[i-1] attribute:NSLayoutAttributeBottom multiplier:1.0 constant:paddingBetweenForecastViews]];
+                
+                //forecastViews[i].circleView.centerX = forecastViews[i-1].circleView.centerX
+                [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.forecastViews[i].circleView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.forecastViews[i-1].circleView attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
+                [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.forecastViews[i].tempSeperatorLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.forecastViews[i-1].tempSeperatorLabel attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
+                [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.forecastViews[i].iconWindImageView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.forecastViews[i-1].iconWindImageView attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
+                [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.forecastViews[i].iconPoPImageView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.forecastViews[i-1].iconPoPImageView attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
+                [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.forecastViews[i].iconHumidityImageView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.forecastViews[i-1].iconHumidityImageView attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
+
+                
             }
             //self.forecastViews[6].bottom = superview.bottom
             if(i == 7-1){
@@ -106,14 +125,17 @@
 
 -(void)viewWillLayoutSubviews
 {
-    [super viewWillLayoutSubviews];
-    CGFloat topGuide;
-    if([self respondsToSelector:@selector(topLayoutGuide)]){
-        topGuide = [self.topLayoutGuide length];
-    }else{
-        topGuide = [[UIApplication sharedApplication] statusBarFrame].size.height;
+    //not contained in a UINavigationController
+    if([self navigationController] == nil){
+        [super viewWillLayoutSubviews];
+        CGFloat topGuide;
+        if([self respondsToSelector:@selector(topLayoutGuide)]){
+            topGuide = [self.topLayoutGuide length];
+        }else{
+            topGuide = [[UIApplication sharedApplication] statusBarFrame].size.height;
+        }
+        [_topLayoutConstraint setConstant:topGuide];
     }
-    [_topLayoutConstraint setConstant:topGuide];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -166,12 +188,14 @@
     
 }
 
+//IMPORTANT: MAY BE CALLED MORE THAN ONCE!
+//
 -(void)weatherDataDidReceivDaylyForecast:(NSArray *)dailyForecast sender:(ZZWeatherDataProvider *)sender
 {
 //    NSLog(@"--WeatherDataProvider:: Receive Daily Forecast! \n\tDaily forecast=%@", dailyForecast);
     for(int i=0; i<7; i++){
         NSDictionary *dayForecast = dailyForecast[i];
-        ZZWeatherDayForecastView *forecastView = self.forecastViews[i];
+        ZZForecastView *forecastView = self.forecastViews[i];
         NSString *dateString = [dayForecast objectForKey:@"date"];
         NSDateFormatter *formatterIn = [[NSDateFormatter alloc] init];
         [formatterIn setDateFormat:@"yyyy-MM-dd"];

@@ -68,7 +68,6 @@
 		612FA5F81DC5A6C100648D17 /* 901.png in Resources */ = {isa = PBXBuildFile; fileRef = 612FA5C31DC5A6C100648D17 /* 901.png */; };
 		612FA5F91DC5A6C100648D17 /* 999.png in Resources */ = {isa = PBXBuildFile; fileRef = 612FA5C41DC5A6C100648D17 /* 999.png */; };
 		612FA5FA1DC5A6C100648D17 /* __weather_icons.json in Resources */ = {isa = PBXBuildFile; fileRef = 612FA5C51DC5A6C100648D17 /* __weather_icons.json */; };
-		612FA5FD1DC8C86900648D17 /* ZZWeatherDayForecastView.m in Sources */ = {isa = PBXBuildFile; fileRef = 612FA5FC1DC8C86900648D17 /* ZZWeatherDayForecastView.m */; };
 		612FA6041DCB187700648D17 /* ZZCityListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 612FA6031DCB187700648D17 /* ZZCityListViewController.m */; };
 		612FA60C1DCB8A3B00648D17 /* icon_wind.png in Resources */ = {isa = PBXBuildFile; fileRef = 612FA60A1DCB8A3B00648D17 /* icon_wind.png */; };
 		612FA60F1DCB8DB000648D17 /* icon_pop.png in Resources */ = {isa = PBXBuildFile; fileRef = 612FA60E1DCB8DB000648D17 /* icon_pop.png */; };
@@ -149,8 +148,6 @@
 		612FA5C31DC5A6C100648D17 /* 901.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 901.png; sourceTree = "<group>"; };
 		612FA5C41DC5A6C100648D17 /* 999.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 999.png; sourceTree = "<group>"; };
 		612FA5C51DC5A6C100648D17 /* __weather_icons.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = __weather_icons.json; sourceTree = "<group>"; };
-		612FA5FB1DC8C86900648D17 /* ZZWeatherDayForecastView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZZWeatherDayForecastView.h; sourceTree = "<group>"; };
-		612FA5FC1DC8C86900648D17 /* ZZWeatherDayForecastView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZZWeatherDayForecastView.m; sourceTree = "<group>"; };
 		612FA6021DCB187700648D17 /* ZZCityListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZZCityListViewController.h; path = ../ZZCityListViewController.h; sourceTree = "<group>"; };
 		612FA6031DCB187700648D17 /* ZZCityListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZZCityListViewController.m; path = ../ZZCityListViewController.m; sourceTree = "<group>"; };
 		612FA60A1DCB8A3B00648D17 /* icon_wind.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_wind.png; sourceTree = "<group>"; };
@@ -243,14 +240,11 @@
 			children = (
 				612FA58A1DC36A7100648D17 /* ZZWeatherNowView.h */,
 				612FA58B1DC36A7100648D17 /* ZZWeatherNowView.m */,
-				612FA5FB1DC8C86900648D17 /* ZZWeatherDayForecastView.h */,
-				612FA5FC1DC8C86900648D17 /* ZZWeatherDayForecastView.m */,
 				612FA6021DCB187700648D17 /* ZZCityListViewController.h */,
 				612FA6031DCB187700648D17 /* ZZCityListViewController.m */,
 				612FA6141DCC76BE00648D17 /* ZZForecastView.xib */,
 				612FA6161DCC76EC00648D17 /* ZZForecastView.h */,
 				612FA6171DCC76EC00648D17 /* ZZForecastView.m */,
-				612FA58F1DC5A67B00648D17 /* icons */,
 			);
 			name = weather_ui;
 			sourceTree = "<group>";
@@ -331,6 +325,7 @@
 			isa = PBXGroup;
 			children = (
 				612FA6121DCBA77D00648D17 /* citylist_allchina.json */,
+				612FA58F1DC5A67B00648D17 /* icons */,
 			);
 			name = resources;
 			sourceTree = "<group>";
@@ -483,7 +478,6 @@
 				612FA5871DC35DAB00648D17 /* ZZWeather.m in Sources */,
 				612FA5841DC346A500648D17 /* ZZWeatherDataProvider.m in Sources */,
 				612FA61D1DCC78AA00648D17 /* ZZCircleView.m in Sources */,
-				612FA5FD1DC8C86900648D17 /* ZZWeatherDayForecastView.m in Sources */,
 				612FA6181DCC76EC00648D17 /* ZZForecastView.m in Sources */,
 				612FA58C1DC36A7100648D17 /* ZZWeatherNowView.m in Sources */,
 				612FA5721DC3452500648D17 /* ViewController.m in Sources */,
@@ -632,6 +626,7 @@
 				612FA5801DC3452500648D17 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

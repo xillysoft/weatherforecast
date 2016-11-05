@@ -220,7 +220,7 @@
     NSDictionary *cityInfo = [self _getCityInfoAtIndexPath:indexPath];
     NSString *cityId = [cityInfo objectForKey:@"id"];
     NSString *cityName = [cityInfo objectForKey:@"city"];
-    NSLog(@"--City: %@ [%@] selected!", cityName, cityId);
+//    NSLog(@"--City: %@ [%@] selected!", cityName, cityId);
     [self.delegate cityDidSelectWithId:cityId cityName:cityName];
     
 }

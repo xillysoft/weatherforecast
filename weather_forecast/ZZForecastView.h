@@ -7,8 +7,25 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ZZCircleView.h"
 
 @interface ZZForecastView : UIView
+
+@property (weak, nonatomic) IBOutlet ZZCircleView *circleView;
+@property (weak, nonatomic) IBOutlet UIImageView *conditionImageView;
+@property (weak, nonatomic) IBOutlet UILabel *tempHighLabel;
+@property (weak, nonatomic) IBOutlet UILabel *tempSeperatorLabel;
+@property (weak, nonatomic) IBOutlet UILabel *tempLowLabel;
+@property (weak, nonatomic) IBOutlet UILabel *conditionTxtLabel;
+@property (weak, nonatomic) IBOutlet UILabel *windScaleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *windDirLabel;
+@property (weak, nonatomic) IBOutlet UILabel *poPLabel;
+
+@property (weak, nonatomic) IBOutlet UILabel *humidityLabel;
+
+@property (weak, nonatomic) IBOutlet UIImageView *iconWindImageView;
+@property (weak, nonatomic) IBOutlet UIImageView *iconPoPImageView;
+@property (weak, nonatomic) IBOutlet UIImageView *iconHumidityImageView;
 
 /*!
  * the date the forecast is last updated

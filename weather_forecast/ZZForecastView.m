@@ -7,7 +7,6 @@
 //
 
 #import "ZZForecastView.h"
-#import "ZZCircleView.h"
 
 @interface ZZForecastView(){
     NSDate *_forecastDate; //发布日期
@@ -23,32 +22,35 @@
     NSNumber *_PoP; //probability of precipitation %
     NSNumber *_humidity; //humidity %
 }
-@property (weak, nonatomic) IBOutlet ZZCircleView *circleView;
-@property (weak, nonatomic) IBOutlet UIImageView *conditionImageView;
-@property (weak, nonatomic) IBOutlet UILabel *tempHighLabel;
-@property (weak, nonatomic) IBOutlet UILabel *tempLowLabel;
-@property (weak, nonatomic) IBOutlet UILabel *conditionTxtLabel;
-@property (weak, nonatomic) IBOutlet UILabel *windScaleLabel;
-@property (weak, nonatomic) IBOutlet UILabel *windDirLabel;
-@property (weak, nonatomic) IBOutlet UILabel *PoPLabel;
-@property (weak, nonatomic) IBOutlet UILabel *humidityLabel;
-
-@property (weak, nonatomic) IBOutlet UIImageView *iconWindImageView;
-@property (weak, nonatomic) IBOutlet UIImageView *iconPoPImageView;
-@property (weak, nonatomic) IBOutlet UIImageView *iconHumidityImageView;
 
 @end
 
 
 @implementation ZZForecastView
 
--(instancetype)init
+-(instancetype)initWithFrame:(CGRect)frame
 {
-    return [[[NSBundle mainBundle] loadNibNamed:@"ZZForecastView"
-                                          owner:self
-                                        options:nil] firstObject];
-    
+    self = [super initWithFrame:frame];
+    if(self){
+        [self _initViews];
+    }
+    return self;
 }
+
+-(instancetype)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    if(self){
+        [self _initViews];
+    }
+    return self;
+}
+
+-(void)setBackgroundColor:(UIColor *)backgroundColor
+{
+    [super setBackgroundColor:[UIColor clearColor]];
+}
+
 -(void)awakeFromNib
 {
     [super awakeFromNib];
@@ -66,6 +68,14 @@
     self.iconWindImageView.tintColor = iconTintColor;
     self.iconPoPImageView.tintColor = iconTintColor;
     self.iconHumidityImageView.tintColor = iconTintColor;
+ 
+    self.conditionImageView.image = nil;
+    self.tempHighLabel.text = self.tempLowLabel.text = @"-";
+    self.conditionTxtLabel.text = nil;
+    self.windDirLabel.text = @"-";
+    self.windScaleLabel.text = nil;
+    self.poPLabel.text = @"-";
+    self.humidityLabel.text = @"-";
     
 }
 
@@ -99,8 +109,24 @@
     UIImage *dayImage = [UIImage imageNamed:[bundle pathForResource:dayCode ofType:@"png"]];
 //    UIImage *nightImage = [UIImage imageNamed:[bundle pathForResource:nightCode ofType:@"png"]];
 
-    self.conditionImageView.image = dayImage;
+    self.conditionImageView.image = [dayImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     self.conditionTxtLabel.text = dayText;
+    
+    //decide best tintColor for day condition
+    {
+        const NSDictionary <NSString *, UIColor *> *tintColors = @{@"1": [UIColor lightGrayColor], //cloudy
+                                                                   @"3": [UIColor blueColor], //rainy
+                                                                   @"4": [UIColor purpleColor] //snowy
+                                                                   };
+        NSString *conditionFirstDigit = [dayCode substringToIndex:1];
+        UIColor *tintColor = [tintColors objectForKey:conditionFirstDigit];
+        if([dayCode isEqualToString:@"100"]){ //sunny
+            self.conditionImageView.tintColor = [UIColor orangeColor];
+        }else{
+            self.conditionImageView.tintColor = tintColor ? tintColor : [UIColor lightGrayColor];
+        }
+    }
+    
 }
 
 /*!
@@ -112,7 +138,7 @@
     _tempMin = minTemp;
 
     self.tempHighLabel.text = [maxTemp stringValue];
-    self.tempLowLabel.text = [minTemp stringValue];
+    self.tempLowLabel.text = [maxTemp stringValue];
 }
 
 /*!
@@ -136,7 +162,7 @@
 {
     _PoP = pop;
 
-    self.PoPLabel.text = [pop stringValue];
+    self.poPLabel.text = [pop stringValue];
 }
 
 /*!

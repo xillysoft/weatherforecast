@@ -138,7 +138,7 @@
     _tempMin = minTemp;
 
     self.tempHighLabel.text = [maxTemp stringValue];
-    self.tempLowLabel.text = [maxTemp stringValue];
+    self.tempLowLabel.text = [minTemp stringValue];
 }
 
 /*!

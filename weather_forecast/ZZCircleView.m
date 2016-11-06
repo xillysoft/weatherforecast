@@ -37,9 +37,9 @@
 
 -(void)drawRect:(CGRect)rect
 {
-    const CGFloat lineWidth = 4;
-    
     CGSize size = rect.size;
+    const CGFloat lineWidth = size.width > 60 ? 4 : 2;
+    
     CGContextRef context = UIGraphicsGetCurrentContext();
     
     CGFloat r = MIN(size.width, size.height)/2;

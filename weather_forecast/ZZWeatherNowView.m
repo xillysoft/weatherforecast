@@ -150,7 +150,7 @@
     [self.conditionTextLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [self.lastUpdatedLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     
-    CGFloat conditionImageSize = [[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone ? 100 : 200;
+    CGFloat conditionImageSize = [[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone ? 100 : 150;
     [_weatherConditionImageSizeConstaint setConstant:conditionImageSize];
     //    [self setNeedsUpdateConstraints];
 

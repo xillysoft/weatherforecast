@@ -11,9 +11,12 @@
 #import "ZZWeatherNowView.h"
 #import "ZZForecastView.h"
 
-@interface ViewController () <ZZWeatherDataProviderDelegate> {
+@interface ViewController () <ZZWeatherDataProviderDelegate, UIScrollViewDelegate> {
     NSLayoutConstraint *_topLayoutConstraint;
     BOOL _isConstaintsUpdated;
+    
+    BOOL _isRequestingWeatherData;
+    BOOL _isScrollViewDragging;
 }
 
 @property ZZWeatherDataProvider *weatherData;
@@ -29,11 +32,11 @@
 {
     UIColor *backgroundColor = [UIColor colorWithRed:0.15 green:0.15 blue:0.15 alpha:1.0];
     
-    UIView *container = [[UIScrollView alloc] initWithFrame:CGRectZero];
-    container.backgroundColor = backgroundColor;
+    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectZero];
+    scrollView.backgroundColor = backgroundColor;
     
     self.weatherNowView = [[ZZWeatherNowView alloc] initWithFrame:CGRectZero];
-    [container addSubview:self.weatherNowView];
+    [scrollView addSubview:self.weatherNowView];
     
     self.forecastViews = [NSMutableArray array];
     for(int i=0; i<7; i++){
@@ -43,15 +46,35 @@
 //        forecastView.backgroundColor = i%2==0 ?  backgroundColor : [UIColor blackColor];
         forecastView.backgroundColor = backgroundColor;
         [self.forecastViews addObject:forecastView];
-        [container addSubview:forecastView];
+        [scrollView addSubview:forecastView];
     }
     
 //    view.translatesAutoresizingMaskIntoConstraints = NO;
-    self.view = container;
+    self.view = scrollView;
     
     _isConstaintsUpdated = NO;
     [self updateViewConstraints]; //-updateViewConstraints will not called initially
+    
+    
+    scrollView.delegate = self;
+    _isScrollViewDragging = NO;
 }
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view, typically from a nib.
+    NSString *authKey = @"abb4394c4a8441159cd794ecaa7b5ef2";
+    NSString *cityId = self.cityId ? self.cityId : @"CN101080101";
+    self.weatherData = [[ZZWeatherDataProvider alloc] initWithCityId:cityId authKey:authKey];
+    self.weatherData.delegate = self;
+    [self.weatherData requestWeatherData];
+    _isRequestingWeatherData = YES;
+    
+    [self.navigationController setNavigationBarHidden:NO];
+    [self setTitle:self.cityName];
+ 
+}
+
 
 -(void)updateViewConstraints
 {
@@ -66,7 +89,7 @@
         [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.weatherNowView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.weatherNowView.superview attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
         [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.weatherNowView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.weatherNowView.superview attribute:NSLayoutAttributeWidth multiplier:1.0 constant:0]];
         
-        const CGFloat paddingBetweenForecastViews = 20;
+        const CGFloat paddingBetweenForecastViews = 30;
         
         for(int i=0; i<7; i++){
             ZZForecastView *forecastView = self.forecastViews[i];
@@ -81,6 +104,10 @@
                 [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.forecastViews[i] attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.forecastViews[i-1] attribute:NSLayoutAttributeBottom multiplier:1.0 constant:paddingBetweenForecastViews]];
                 
                 //forecastViews[i].circleView.centerX = forecastViews[i-1].circleView.centerX
+                //forecastViews[i].tempSeparatorLabel.centerX = forecastViews[i-1].tempSeparatorLabel.centerX
+                //forecastViews[i].iconWindImageView.centerX = forecastViews[i-1].iconWindImageView.centerX
+                //forecastViews[i].iconPoPImageView.centerX = forecastViews[i-1].iconPoPImageView.centerX
+                //forecastViews[i].iconHumidityImageView.centerX = forecastViews[i-1].iconHumidityImageView.centerX
                 [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.forecastViews[i].circleView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.forecastViews[i-1].circleView attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
                 [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.forecastViews[i].tempSeperatorLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.forecastViews[i-1].tempSeperatorLabel attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
                 [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.forecastViews[i].iconWindImageView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.forecastViews[i-1].iconWindImageView attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
@@ -104,24 +131,6 @@
     [super updateViewConstraints];
 }
 
--(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
-{
-    BOOL hidden = [[self navigationController] isNavigationBarHidden];
-    [[self navigationController] setNavigationBarHidden:!hidden animated:YES];
-}
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
-    NSString *authKey = @"abb4394c4a8441159cd794ecaa7b5ef2";
-    NSString *cityId = self.cityId ? self.cityId : @"CN101080101";
-    self.weatherData = [[ZZWeatherDataProvider alloc] initWithCityId:cityId authKey:authKey];
-    self.weatherData.delegate = self;
-    [self.weatherData requestWeatherData];
-    
-    [self.navigationController setNavigationBarHidden:NO];
-    [self setTitle:self.cityName];
-}
 
 -(void)viewWillLayoutSubviews
 {
@@ -138,10 +147,6 @@
     }
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 
 -(void)weatherDataDidFailWithConnectionError:(NSError *)error response:(NSURLResponse *)response sender:(ZZWeatherDataProvider *)weatherData
 {
@@ -173,7 +178,8 @@
 
 -(void)weatherDataDidReceivNowWeather:(NSDictionary *)weatherNow sender:(ZZWeatherDataProvider *)sender
 {
-//    NSLog(@"--WeatherDataProvider:: Receive Now Weather! \n\tnow=%@", weatherNow);
+    _isRequestingWeatherData = NO;
+    NSLog(@"--WeatherDataProvider:: Receive Now Weather!");
     
     NSString *conditionCode = [[weatherNow objectForKey:@"cond"] objectForKey:@"code"];
     NSString *conditionText = [[weatherNow objectForKey:@"cond"] objectForKey:@"txt"];
@@ -192,8 +198,8 @@
 //
 -(void)weatherDataDidReceivDaylyForecast:(NSArray *)dailyForecast sender:(ZZWeatherDataProvider *)sender
 {
-//    NSLog(@"--WeatherDataProvider:: Receive Daily Forecast! \n\tDaily forecast=%@", dailyForecast);
-    for(int i=0; i<7; i++){
+    NSLog(@"--WeatherDataProvider:: Receive Daily Forecast! days=%@", @([dailyForecast count]));
+    for(int i=0; i<MIN(7, [dailyForecast count]); i++){
         NSDictionary *dayForecast = dailyForecast[i];
         ZZForecastView *forecastView = self.forecastViews[i];
         NSString *dateString = [dayForecast objectForKey:@"date"];
@@ -234,5 +240,35 @@
     
 }
 
+-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    _isScrollViewDragging = YES;
+//    NSLog(@"--scrollView:willBeginDraggin:");
+}
+-(void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
+{
+//    NSLog(@"--scrollView:willEndDragging:! velocity=%@", NSStringFromCGPoint(velocity));
+}
+-(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    _isScrollViewDragging = NO;
+//    NSLog(@"--scrollView:didEndDragging:! decelerate=%@\n\n", @(decelerate));
+}
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if(_isScrollViewDragging){
+//        NSLog(@"--scrollView:didScroll:! offset=%@\n", NSStringFromCGPoint(scrollView.contentOffset));
+        if(scrollView.contentOffset.y <= -100 && !_isRequestingWeatherData){
+            [_weatherData requestWeatherData];
+            _isRequestingWeatherData = YES;
+            NSLog(@"--requestWeatherData...");
+        }
+    }
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
 
 @end

@@ -11,6 +11,10 @@
 
 @interface ZZForecastView : UIView
 
+@property (weak, nonatomic) IBOutlet UIView *leftView;
+@property (weak, nonatomic) IBOutlet UILabel *leftDateUpper;
+@property (weak, nonatomic) IBOutlet UILabel *leftDateLower;
+
 @property (weak, nonatomic) IBOutlet ZZCircleView *circleView;
 @property (weak, nonatomic) IBOutlet UIImageView *conditionImageView;
 @property (weak, nonatomic) IBOutlet UILabel *tempHighLabel;

@@ -93,6 +93,24 @@
 -(void)setForecastDate:(NSDate *)date
 {
     _forecastDate = date;
+    
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.dateFormat = @"M/d";
+    self.leftDateUpper.text = [formatter stringFromDate:date];
+    
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSCalendarUnit dateUnits = NSCalendarUnitEra | NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay;
+    NSDateComponents *forecastDay = [calendar components:dateUnits fromDate:[NSDate date]];
+    NSDateComponents *today = [calendar components:dateUnits fromDate:date];
+    if([forecastDay isEqual:today]){
+        self.leftDateLower.text = @"今天";
+        self.leftDateLower.textColor = [UIColor grayColor];
+    }else{
+        formatter.dateFormat = @"EEEE"; //week day
+        self.leftDateLower.text = [formatter stringFromDate:date];
+        self.leftDateLower.textColor = [UIColor darkGrayColor];
+    }
+    
 }
 
 /*!

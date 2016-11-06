@@ -103,11 +103,14 @@
                 //forecastViews[i].top == forecastViews[i-1].to + padding
                 [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.forecastViews[i] attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.forecastViews[i-1] attribute:NSLayoutAttributeBottom multiplier:1.0 constant:paddingBetweenForecastViews]];
                 
+                //Additional constriants added to align views on the same columns of rows
+                //forecastViews[i].leftView.width = forecastViews[i-1].leftView.width
                 //forecastViews[i].circleView.centerX = forecastViews[i-1].circleView.centerX
                 //forecastViews[i].tempSeparatorLabel.centerX = forecastViews[i-1].tempSeparatorLabel.centerX
                 //forecastViews[i].iconWindImageView.centerX = forecastViews[i-1].iconWindImageView.centerX
                 //forecastViews[i].iconPoPImageView.centerX = forecastViews[i-1].iconPoPImageView.centerX
                 //forecastViews[i].iconHumidityImageView.centerX = forecastViews[i-1].iconHumidityImageView.centerX
+                [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.forecastViews[i].leftView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.forecastViews[i-1].leftView attribute:NSLayoutAttributeWidth multiplier:1.0 constant:0]];
                 [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.forecastViews[i].circleView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.forecastViews[i-1].circleView attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
                 [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.forecastViews[i].tempSeperatorLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.forecastViews[i-1].tempSeperatorLabel attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
                 [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.forecastViews[i].iconWindImageView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.forecastViews[i-1].iconWindImageView attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
@@ -179,7 +182,7 @@
 -(void)weatherDataDidReceivNowWeather:(NSDictionary *)weatherNow sender:(ZZWeatherDataProvider *)sender
 {
     _isRequestingWeatherData = NO;
-    NSLog(@"--WeatherDataProvider:: Receive Now Weather!");
+//    NSLog(@"--WeatherDataProvider:: Receive Now Weather!");
     
     NSString *conditionCode = [[weatherNow objectForKey:@"cond"] objectForKey:@"code"];
     NSString *conditionText = [[weatherNow objectForKey:@"cond"] objectForKey:@"txt"];
@@ -198,7 +201,7 @@
 //
 -(void)weatherDataDidReceivDaylyForecast:(NSArray *)dailyForecast sender:(ZZWeatherDataProvider *)sender
 {
-    NSLog(@"--WeatherDataProvider:: Receive Daily Forecast! days=%@", @([dailyForecast count]));
+//    NSLog(@"--WeatherDataProvider:: Receive Daily Forecast! days=%@", @([dailyForecast count]));
     for(int i=0; i<MIN(7, [dailyForecast count]); i++){
         NSDictionary *dayForecast = dailyForecast[i];
         ZZForecastView *forecastView = self.forecastViews[i];

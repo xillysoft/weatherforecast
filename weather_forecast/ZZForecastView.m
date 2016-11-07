@@ -69,14 +69,18 @@
     self.iconPoPImageView.tintColor = iconTintColor;
     self.iconHumidityImageView.tintColor = iconTintColor;
  
+    self.leftDateUpper.text = @"-";
+    self.leftDateLower.text = @"-";
     self.conditionImageView.image = nil;
     self.tempHighLabel.text = self.tempLowLabel.text = @"-";
     self.conditionTxtLabel.text = nil;
     self.windDirLabel.text = @"-";
     self.windScaleLabel.text = nil;
-    self.poPLabel.text = @"-";
+    self.PoPLabel.text = @"-";
     self.humidityLabel.text = @"-";
     
+    self.PoPUnitLabel.textColor = [UIColor grayColor];
+    self.humidityUnitLabel.textColor = [UIColor grayColor];
 }
 
 /*
@@ -95,20 +99,26 @@
     _forecastDate = date;
     
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setLocale:[NSLocale currentLocale]];
     formatter.dateFormat = @"M/d";
     self.leftDateUpper.text = [formatter stringFromDate:date];
     
     NSCalendar *calendar = [NSCalendar currentCalendar];
     NSCalendarUnit dateUnits = NSCalendarUnitEra | NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay;
-    NSDateComponents *forecastDay = [calendar components:dateUnits fromDate:[NSDate date]];
-    NSDateComponents *today = [calendar components:dateUnits fromDate:date];
-    if([forecastDay isEqual:today]){
+    NSDateComponents *dateComponents = [calendar components:dateUnits fromDate:date];
+    NSDate *now = [NSDate date];
+    NSDateComponents *today = [calendar components:dateUnits fromDate:now];
+    NSDateComponents *tomorrow = [calendar components:dateUnits fromDate:[now dateByAddingTimeInterval:24*60*60]];
+    if([dateComponents isEqual:today]){
         self.leftDateLower.text = @"今天";
-        self.leftDateLower.textColor = [UIColor grayColor];
+        self.leftDateLower.textColor = [UIColor lightGrayColor];
+    }else if([dateComponents isEqual:tomorrow]){
+        self.leftDateLower.text = @"明天";
+        self.leftDateLower.textColor = [UIColor lightGrayColor];
     }else{
         formatter.dateFormat = @"EEEE"; //week day
         self.leftDateLower.text = [formatter stringFromDate:date];
-        self.leftDateLower.textColor = [UIColor darkGrayColor];
+        self.leftDateLower.textColor = [UIColor lightGrayColor];
     }
     
 }
@@ -125,9 +135,25 @@
 
     NSBundle *bundle = [NSBundle mainBundle];
     UIImage *dayImage = [UIImage imageNamed:[bundle pathForResource:dayCode ofType:@"png"]];
+    UIImage *dayImageTemplate = [dayImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 //    UIImage *nightImage = [UIImage imageNamed:[bundle pathForResource:nightCode ofType:@"png"]];
 
-    self.conditionImageView.image = [dayImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+//    self.conditionImageView.image = dayImageTemplate; //-->
+    {
+        [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+            [[self.conditionImageView layer] setTransform:CATransform3DMakeRotation(M_PI/2, 0, 1, 0)]; //+90 degree
+            [[self.tempHighLabel layer] setOpacity:0.0];
+        } completion:^(BOOL finished) {
+            self.conditionImageView.image = dayImageTemplate;
+            [UIView animateWithDuration:0.3 delay:0 usingSpringWithDamping:0.1 initialSpringVelocity:1 options:UIViewAnimationOptionCurveEaseIn animations:^{
+                [[self.conditionImageView layer] setTransform:CATransform3DMakeRotation(M_PI*2, 0, 1, 0)]; //+90 degree
+                [[self.tempHighLabel layer] setOpacity:1.0];
+            } completion:^(BOOL finished) {
+                //
+            }];
+        }];
+    };
+    
     self.conditionTxtLabel.text = dayText;
     
     //decide best tintColor for day condition
@@ -148,15 +174,28 @@
 }
 
 /*!
- * hight temperature, low temperature
+ * high temperature, low temperature
  */
 -(void)setTemperatureMax:(NSNumber *)maxTemp min:(NSNumber *)minTemp
 {
     _tempMax = maxTemp;
     _tempMin = minTemp;
 
-    self.tempHighLabel.text = [maxTemp stringValue];
-    self.tempLowLabel.text = [minTemp stringValue];
+//    self.tempHighLabel.text = [maxTemp stringValue]; //-->
+//    self.tempLowLabel.text = [minTemp stringValue]; //-->
+    {
+        [[self.tempHighLabel layer] setOpacity:0.0];
+        [[self.tempLowLabel layer] setOpacity:0.0];
+        self.tempHighLabel.text = [maxTemp stringValue];
+        self.tempLowLabel.text = [minTemp stringValue];
+        [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+            [[self.tempHighLabel layer] setOpacity:1.0];
+            [[self.tempLowLabel layer] setOpacity:1.0];
+        } completion:^(BOOL finished) {
+            //
+        }];
+    };
+    
 }
 
 /*!
@@ -169,7 +208,26 @@
     _windSpd = windSpd;
     
     //self.windScaleLabel.text can be set as winSC or windSpd(kMPH)
-    self.windScaleLabel.text = windSC;
+    BOOL usingWindkMPH = YES;
+    if(usingWindkMPH){
+        NSString *speedString = [windSpd stringValue];
+        UIFont *font0 = self.windScaleLabel.font;
+        UIFont *unitFont = self.PoPUnitLabel.font;
+        UIColor *unitColor = self.PoPUnitLabel.textColor;
+        NSString *unitString = @" kMPH";
+        NSString *string = [speedString stringByAppendingString:unitString];
+        NSRange unitRange = NSMakeRange([speedString length], [unitString length]);
+        self.windScaleLabel.attributedText = ({
+            NSMutableAttributedString *as = [[NSMutableAttributedString alloc] initWithString:string];
+            [as addAttribute:NSFontAttributeName value:unitFont range:unitRange];
+            CGFloat baseLineOffset = [font0 capHeight]-[unitFont capHeight];
+            [as addAttribute:NSBaselineOffsetAttributeName value:@(baseLineOffset) range:NSMakeRange([speedString length], [unitString length])];
+            [as addAttribute:NSForegroundColorAttributeName value:unitColor range:unitRange];
+            as;
+        });
+    }else{
+        self.windScaleLabel.text = windSC;
+    }
     self.windDirLabel.text = windDir;
 }
 
@@ -180,7 +238,7 @@
 {
     _PoP = pop;
 
-    self.poPLabel.text = [pop stringValue];
+    self.PoPLabel.text = [pop stringValue];
 }
 
 /*!

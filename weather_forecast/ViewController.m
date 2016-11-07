@@ -21,6 +21,8 @@
 
 @property ZZWeatherDataProvider *weatherData;
 
+@property UIActivityIndicatorView *activityIndicatorView;
+
 @property ZZWeatherNowView *weatherNowView;
 @property NSMutableArray<ZZForecastView *> *forecastViews;
 
@@ -30,9 +32,13 @@
 
 -(void)loadView
 {
-    UIColor *backgroundColor = [UIColor colorWithRed:0.15 green:0.15 blue:0.15 alpha:1.0];
     
     UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectZero];
+    //prevent view controller to automatically adjust scrollview, add a topGuide constriant manually
+    [self setAutomaticallyAdjustsScrollViewInsets:NO];
+    
+    //TODO use a background picture insead solid color
+    UIColor *backgroundColor = [UIColor colorWithRed:0.15 green:0.15 blue:0.15 alpha:1.0];
     scrollView.backgroundColor = backgroundColor;
     
     self.weatherNowView = [[ZZWeatherNowView alloc] initWithFrame:CGRectZero];
@@ -58,6 +64,11 @@
     
     scrollView.delegate = self;
     _isScrollViewDragging = NO;
+    
+    self.activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    [[self navigationItem] setRightBarButtonItem:[[UIBarButtonItem alloc] initWithCustomView:self.activityIndicatorView]];
+    self.activityIndicatorView.hidesWhenStopped = YES;
+    self.activityIndicatorView.color = [UIColor blueColor];
 }
 
 - (void)viewDidLoad {
@@ -67,8 +78,7 @@
     NSString *cityId = self.cityId ? self.cityId : @"CN101080101";
     self.weatherData = [[ZZWeatherDataProvider alloc] initWithCityId:cityId authKey:authKey];
     self.weatherData.delegate = self;
-    [self.weatherData requestWeatherData];
-    _isRequestingWeatherData = YES;
+    [self.weatherData requestWeatherData_x3];
     
     [self.navigationController setNavigationBarHidden:NO];
     [self setTitle:self.cityName];
@@ -137,9 +147,10 @@
 
 -(void)viewWillLayoutSubviews
 {
-    //not contained in a UINavigationController
-    if([self navigationController] == nil){
+    //Note: Set UIViewController's automaticallyAjustsScrollViewInsets = NO
+    {
         [super viewWillLayoutSubviews];
+        
         CGFloat topGuide;
         if([self respondsToSelector:@selector(topLayoutGuide)]){
             topGuide = [self.topLayoutGuide length];
@@ -150,6 +161,16 @@
     }
 }
 
+-(void)weatherDataWillBeginLoading:(ZZWeatherDataProvider *)sender
+{
+    _isRequestingWeatherData = YES;
+    [self.activityIndicatorView startAnimating];
+}
+-(void)weatherDataDidEndLoading:(ZZWeatherDataProvider *)sender
+{
+    _isRequestingWeatherData = NO;
+    [self.activityIndicatorView stopAnimating];
+}
 
 -(void)weatherDataDidFailWithConnectionError:(NSError *)error response:(NSURLResponse *)response sender:(ZZWeatherDataProvider *)weatherData
 {
@@ -181,7 +202,6 @@
 
 -(void)weatherDataDidReceivNowWeather:(NSDictionary *)weatherNow sender:(ZZWeatherDataProvider *)sender
 {
-    _isRequestingWeatherData = NO;
 //    NSLog(@"--WeatherDataProvider:: Receive Now Weather!");
     
     NSString *conditionCode = [[weatherNow objectForKey:@"cond"] objectForKey:@"code"];
@@ -197,11 +217,13 @@
     
 }
 
-//IMPORTANT: MAY BE CALLED MORE THAN ONCE!
-//
+//handle daily forecast
 -(void)weatherDataDidReceivDaylyForecast:(NSArray *)dailyForecast sender:(ZZWeatherDataProvider *)sender
 {
-//    NSLog(@"--WeatherDataProvider:: Receive Daily Forecast! days=%@", @([dailyForecast count]));
+    if([dailyForecast count] < 7){
+        NSLog(@"--WeatherDataProvider:: Receive Daily Forecast! days=%@", @([dailyForecast count]));
+    }
+    
     for(int i=0; i<MIN(7, [dailyForecast count]); i++){
         NSDictionary *dayForecast = dailyForecast[i];
         ZZForecastView *forecastView = self.forecastViews[i];
@@ -246,25 +268,17 @@
 -(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
     _isScrollViewDragging = YES;
-//    NSLog(@"--scrollView:willBeginDraggin:");
 }
--(void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
-{
-//    NSLog(@"--scrollView:willEndDragging:! velocity=%@", NSStringFromCGPoint(velocity));
-}
+
 -(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
     _isScrollViewDragging = NO;
-//    NSLog(@"--scrollView:didEndDragging:! decelerate=%@\n\n", @(decelerate));
 }
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    if(_isScrollViewDragging){
-//        NSLog(@"--scrollView:didScroll:! offset=%@\n", NSStringFromCGPoint(scrollView.contentOffset));
+    if(_isScrollViewDragging){ //dragging down to refresh
         if(scrollView.contentOffset.y <= -100 && !_isRequestingWeatherData){
-            [_weatherData requestWeatherData];
-            _isRequestingWeatherData = YES;
-            NSLog(@"--requestWeatherData...");
+            [_weatherData requestWeatherData_x3]; //refresh
         }
     }
 }

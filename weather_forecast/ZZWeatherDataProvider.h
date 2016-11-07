@@ -19,6 +19,11 @@
 /*!
  * Failed with network reason.
  */
+
+-(void)weatherDataWillBeginLoading:(ZZWeatherDataProvider *)sender;
+-(void)weatherDataDidEndLoading:(ZZWeatherDataProvider *)sender;
+
+@optional
 -(void)weatherDataDidFailWithConnectionError:(NSError *)error response:(NSURLResponse *)response sender:(ZZWeatherDataProvider *)weatherData;
 
 /*! 
@@ -63,8 +68,11 @@
 
 /*!
  * weather data is returned to delegate methods
+ * Note: x3 weather data provider is deprecated, use v5 interface instead
  */
-- (void)requestWeatherData;
+- (void)requestWeatherData_x3;
+-(void)requestWeatherData_v5;
+
 
 @property NSDate *dateLastUpdated;
 

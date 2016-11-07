@@ -23,9 +23,12 @@
 @property (weak, nonatomic) IBOutlet UILabel *conditionTxtLabel;
 @property (weak, nonatomic) IBOutlet UILabel *windScaleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *windDirLabel;
-@property (weak, nonatomic) IBOutlet UILabel *poPLabel;
-
+@property (weak, nonatomic) IBOutlet UILabel *PoPLabel;
 @property (weak, nonatomic) IBOutlet UILabel *humidityLabel;
+
+@property (weak, nonatomic) IBOutlet UILabel *PoPUnitLabel;
+@property (weak, nonatomic) IBOutlet UILabel *humidityUnitLabel;
+
 
 @property (weak, nonatomic) IBOutlet UIImageView *iconWindImageView;
 @property (weak, nonatomic) IBOutlet UIImageView *iconPoPImageView;

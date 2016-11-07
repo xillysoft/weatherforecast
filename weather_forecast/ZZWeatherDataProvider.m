@@ -34,13 +34,28 @@
     return self;
 }
 
--(void)requestWeatherData
+-(void)requestWeatherData_v5
 {
-    NSString *url = [NSString stringWithFormat:@"https://api.heweather.com/x3/weather?cityid=%@&key=%@", _cityId, _authKey];
+    //TODO  complete v5 inteface access
 
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+//    NSString *urlBase = @"https://free-api.heweather.com/v5"; //v5 interface
+//    NSString *query = [NSString stringWithFormat:@"/forecast?city=%@&key=%@", _cityId, _authKey]; //v5 interface
+//    NSURL *url = [NSURL URLWithString:[urlBase stringByAppendingString:query]];
+}
+
+-(void)requestWeatherData_x3
+{
+    NSString *urlBase = @"https://free-api.heweather.com/x3"; //x3 interface, deprecated
+    NSString *query = [NSString stringWithFormat:@"/weather?cityid=%@&key=%@", _cityId, _authKey]; //x3 interface
+    NSURL *url = [NSURL URLWithString:[urlBase stringByAppendingString:query]];
+//    NSLog(@"--URL=%@", url);
+    
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
     NSOperationQueue *mainQueue = [NSOperationQueue mainQueue];
+    [self.delegate weatherDataWillBeginLoading:self];
+    
     [NSURLConnection sendAsynchronousRequest:request queue:mainQueue completionHandler:^(NSURLResponse * _Nullable response, NSData * _Nullable data, NSError * _Nullable connectionError) {
+        [self.delegate weatherDataDidEndLoading:self];
         if(data == nil){ //Connection error!
             if([self.delegate respondsToSelector:@selector(weatherDataDidFailWithConnectionError:response:sender:)])
                 [self.delegate weatherDataDidFailWithConnectionError:connectionError response:response sender:self];
@@ -103,18 +118,21 @@
                 [self.delegate weatherDataDidReceivSuggestion:wdata_suggestion sender:self];
         }
         
+        //realtime Now weather
         NSDictionary *wdata_now = [wdata objectForKey:@"now"];
         if(wdata_now){
             if([self.delegate respondsToSelector:@selector(weatherDataDidReceivNowWeather:sender:)])
                 [self.delegate weatherDataDidReceivNowWeather:wdata_now sender:self];
         }
 
+        //Hourly forecast
         NSDictionary *wdata_hourly_forecast = [wdata objectForKey:@"hourly_forecast"];
         if(wdata_hourly_forecast){
             if([self.delegate respondsToSelector:@selector(weatherDataDidReceivHourlyForecast:sender:)])
                 [self.delegate weatherDataDidReceivHourlyForecast:wdata_hourly_forecast sender:self];
         }
         
+        //Daily forecast
         NSArray *wdata_daily_forecast = [wdata objectForKey:@"daily_forecast"];
         if(wdata_daily_forecast){
             if([self.delegate respondsToSelector:@selector(weatherDataDidReceivDaylyForecast:sender:)])

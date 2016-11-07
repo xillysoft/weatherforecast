@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		612E8F2C1DD0C89200B09663 /* ZZGradientColoredView.m in Sources */ = {isa = PBXBuildFile; fileRef = 612E8F2B1DD0C89200B09663 /* ZZGradientColoredView.m */; };
 		612FA56C1DC3452500648D17 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 612FA56B1DC3452500648D17 /* main.m */; };
 		612FA56F1DC3452500648D17 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 612FA56E1DC3452500648D17 /* AppDelegate.m */; };
 		612FA5721DC3452500648D17 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 612FA5711DC3452500648D17 /* ViewController.m */; };
@@ -80,6 +81,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		612E8F2A1DD0C89200B09663 /* ZZGradientColoredView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZZGradientColoredView.h; sourceTree = "<group>"; };
+		612E8F2B1DD0C89200B09663 /* ZZGradientColoredView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZZGradientColoredView.m; sourceTree = "<group>"; };
 		612FA5671DC3452500648D17 /* weather_forecast.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = weather_forecast.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		612FA56B1DC3452500648D17 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		612FA56D1DC3452500648D17 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -343,6 +346,8 @@
 			children = (
 				612FA61B1DCC78AA00648D17 /* ZZCircleView.h */,
 				612FA61C1DCC78AA00648D17 /* ZZCircleView.m */,
+				612E8F2A1DD0C89200B09663 /* ZZGradientColoredView.h */,
+				612E8F2B1DD0C89200B09663 /* ZZGradientColoredView.m */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -482,6 +487,7 @@
 				612FA58C1DC36A7100648D17 /* ZZWeatherNowView.m in Sources */,
 				612FA5721DC3452500648D17 /* ViewController.m in Sources */,
 				612FA6041DCB187700648D17 /* ZZCityListViewController.m in Sources */,
+				612E8F2C1DD0C89200B09663 /* ZZGradientColoredView.m in Sources */,
 				612FA56F1DC3452500648D17 /* AppDelegate.m in Sources */,
 				612FA56C1DC3452500648D17 /* main.m in Sources */,
 			);

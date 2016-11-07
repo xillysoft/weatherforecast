@@ -140,16 +140,17 @@
 
 //    self.conditionImageView.image = dayImageTemplate; //-->
     {
-        [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
             [[self.conditionImageView layer] setTransform:CATransform3DMakeRotation(M_PI/2, 0, 1, 0)]; //+90 degree
             [[self.tempHighLabel layer] setOpacity:0.0];
         } completion:^(BOOL finished) {
             self.conditionImageView.image = dayImageTemplate;
-            [UIView animateWithDuration:0.3 delay:0 usingSpringWithDamping:0.1 initialSpringVelocity:1 options:UIViewAnimationOptionCurveEaseIn animations:^{
-                [[self.conditionImageView layer] setTransform:CATransform3DMakeRotation(M_PI*2, 0, 1, 0)]; //+90 degree
+            [UIView animateWithDuration:1.5 delay:0 usingSpringWithDamping:0.05 initialSpringVelocity:0.8 options:UIViewAnimationOptionCurveEaseIn animations:^{
+                [[self.conditionImageView layer] setTransform:CATransform3DMakeRotation(M_PI, 0, 1, 0)];
                 [[self.tempHighLabel layer] setOpacity:1.0];
             } completion:^(BOOL finished) {
-                //
+                //TODO: show other forecast views
+                
             }];
         }];
     };

@@ -10,6 +10,7 @@
 #import "ZZWeatherDataProvider.h"
 #import "ZZWeatherNowView.h"
 #import "ZZForecastView.h"
+#import "ZZGradientColoredView.h"
 
 @interface ViewController () <ZZWeatherDataProviderDelegate, UIScrollViewDelegate> {
     NSLayoutConstraint *_topLayoutConstraint;
@@ -25,6 +26,7 @@
 
 @property ZZWeatherNowView *weatherNowView;
 @property NSMutableArray<ZZForecastView *> *forecastViews;
+@property NSMutableArray<ZZGradientColoredView *> *connectionLineViews;
 
 @end
 
@@ -44,15 +46,28 @@
     self.weatherNowView = [[ZZWeatherNowView alloc] initWithFrame:CGRectZero];
     [scrollView addSubview:self.weatherNowView];
     
+    int numForecasts = 7;
     self.forecastViews = [NSMutableArray array];
-    for(int i=0; i<7; i++){
+    for(int i=0; i<numForecasts; i++){ //n forecastViews
         ZZForecastView *forecastView = (ZZForecastView *)[[[NSBundle mainBundle] loadNibNamed:@"ZZForecastView"
                                                                       owner:nil
                                                                     options:nil] firstObject];
 //        forecastView.backgroundColor = i%2==0 ?  backgroundColor : [UIColor blackColor];
         forecastView.backgroundColor = backgroundColor;
+        
         [self.forecastViews addObject:forecastView];
         [scrollView addSubview:forecastView];
+    }
+    
+    self.connectionLineViews = [NSMutableArray array];
+    for(int i=0; i<numForecasts + 1; i++){ //n+1 connection lines between forecastViews
+        ZZGradientColoredView *connectionLineView = [[ZZGradientColoredView alloc] initWithFrame:CGRectZero];
+        connectionLineView.direction = ZZGradientColoredViewDirectionVertical;
+        connectionLineView.colorStart = [UIColor darkGrayColor]; //TODO: in association with temperature
+        connectionLineView.colorEnd = [UIColor grayColor]; //TODO: in association with temperature
+        
+        [self.connectionLineViews addObject:connectionLineView];
+        [scrollView addSubview:connectionLineView];
     }
     
 //    view.translatesAutoresizingMaskIntoConstraints = NO;
@@ -101,14 +116,16 @@
         
         const CGFloat paddingBetweenForecastViews = 30;
         
-        for(int i=0; i<7; i++){
+        int numForecasts = 7;
+        
+        for(int i=0; i<numForecasts; i++){ //constraints for forecastViews
             ZZForecastView *forecastView = self.forecastViews[i];
             
             forecastView.translatesAutoresizingMaskIntoConstraints = NO;
             //self.forecastViews[i].top = self.weatherNowView.bottom+15 or self.forecastViews[i-1].bottom+20
             if(i == 0){//for forecastView[0]
-                //forecastView.top == weatherNowView.bottom
-                [self.view addConstraint:[NSLayoutConstraint constraintWithItem:forecastView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.weatherNowView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:15]];
+                //forecastView.top == weatherNowView.bottom+20
+                [self.view addConstraint:[NSLayoutConstraint constraintWithItem:forecastView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.weatherNowView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:20]];
             }else{ //i≥1
                 //forecastViews[i].top == forecastViews[i-1].to + padding
                 [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.forecastViews[i] attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.forecastViews[i-1] attribute:NSLayoutAttributeBottom multiplier:1.0 constant:paddingBetweenForecastViews]];
@@ -129,9 +146,9 @@
 
                 
             }
-            //self.forecastViews[6].bottom = superview.bottom
+            //self.forecastViews[6].bottom = superview.bottom - 20
             if(i == 7-1){
-                [self.view addConstraint:[NSLayoutConstraint constraintWithItem:forecastView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:forecastView.superview attribute:NSLayoutAttributeBottom multiplier:1.0 constant:-10]];
+                [self.view addConstraint:[NSLayoutConstraint constraintWithItem:forecastView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:forecastView.superview attribute:NSLayoutAttributeBottom multiplier:1.0 constant:-20]];
             }
             
             //self.weatherForecastView.centerX = superview.centerX
@@ -139,6 +156,38 @@
             [self.view addConstraint:[NSLayoutConstraint constraintWithItem:forecastView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:forecastView.superview attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
             [self.view addConstraint:[NSLayoutConstraint constraintWithItem:forecastView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:forecastView.superview attribute:NSLayoutAttributeWidth multiplier:1.0 constant:0]];
         }
+        
+        const CGFloat connectionLineWidth = 2;
+        for(int i=0; i<numForecasts + 1; i++){ //constraints for connectionLineViews
+            ZZGradientColoredView *connectionLineView = self.connectionLineViews[i];
+            connectionLineView.translatesAutoresizingMaskIntoConstraints = NO;
+            
+            //connectionLineView.width = 5
+            [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.connectionLineViews[i] attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:connectionLineWidth]];
+            
+            ZZForecastView *forecastView = i==0 ? self.forecastViews[0] : self.forecastViews[i-1];
+            //self.connectionLineViews[i].centerX = forecastView.circleView.centerX
+            [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.connectionLineViews[i] attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:forecastView.circleView attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
+            
+
+            if(i == 0){//for connectionLineViews[0]
+                //self.connectionLineViews[i].top = self.weatherNowView.bottom+5
+                [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.connectionLineViews[i] attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.weatherNowView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:5]];
+            }else{ //i≥1
+                //self.connectionLineViews[i].top = self.forecasViews[i-1].circleView.bottom
+                [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.connectionLineViews[i] attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.self.forecastViews[i-1].circleView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0]];
+            }
+            if(i == numForecasts){ //last connectionLineView
+                //self.connectionLineViews[i].bottom = superview.bottom-5
+                [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.connectionLineViews[i] attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.connectionLineViews[i].superview attribute:NSLayoutAttributeBottom multiplier:1.0 constant:-5]];
+            }else{
+                //self.connectionLineViews[i].bottom = self.forecastViews[i].circleView.top
+                [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.connectionLineViews[i] attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.forecastViews[i].circleView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
+            }
+
+
+        }
+        
         _isConstaintsUpdated = YES;
     }
     [super updateViewConstraints];
@@ -241,7 +290,20 @@
         
         NSString *tmp_max = [[dayForecast objectForKey:@"tmp"] objectForKey:@"max"];
         NSString *tmp_min = [[dayForecast objectForKey:@"tmp"] objectForKey:@"min"];
-        [forecastView setTemperatureMax:@([tmp_max integerValue]) min:@([tmp_min integerValue])];
+        CGFloat tempHigh = [tmp_max integerValue];
+        CGFloat tempLow = [tmp_min integerValue];
+        [forecastView setTemperatureMax:@(tempHigh) min:@(tempLow)];
+        
+        CGFloat dayTemp = (tempHigh*0.8 + tempLow*0.2);
+        const CGFloat MIN_TEMP = -10; //TODO: use MIN{dailyForecast.temperature}; instead.
+        const CGFloat MAX_TEMP = 20; //TODO: use MAX{dailyForecast.temperature}; instead.
+        CGFloat hue = (dayTemp - MAX_TEMP) / (MIN_TEMP - MAX_TEMP); //value=[0.0, 1.0]
+        hue = MIN(MAX(0, hue), 1.0);
+        UIColor *colorForTemp = [UIColor colorWithHue:hue saturation:0.6 brightness:1.0 alpha:1.0];
+        [self.connectionLineViews[i] setColorEnd:colorForTemp];
+        [self.connectionLineViews[i+1] setColorStart:colorForTemp];
+        [self.connectionLineViews[i] setNeedsDisplay];
+        [self.connectionLineViews[i+1] setNeedsDisplay];
         
         NSString *wind_dir = [[dayForecast objectForKey:@"wind"] objectForKey:@"dir"];
         NSString *wind_sc = [[dayForecast objectForKey:@"wind"] objectForKey:@"sc"];
@@ -262,6 +324,8 @@
         [formatterOut setLocale:[NSLocale currentLocale]];
 //        NSLog(@"--%d:[%@]: %@-->%@, %@~%@C", i, [formatterOut stringFromDate:forecastDate], cond_txt_d, cond_txt_n, tmp_max, tmp_min);
     }
+    [self.connectionLineViews[0] setColorStart:[self.connectionLineViews[0] colorEnd]];
+    [self.connectionLineViews[[dailyForecast count]] setColorEnd:[self.connectionLineViews[[dailyForecast count]] colorStart]];
     
 }
 

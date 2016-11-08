@@ -69,8 +69,8 @@
     self.iconPoPImageView.tintColor = iconTintColor;
     self.iconHumidityImageView.tintColor = iconTintColor;
  
-    self.leftDateUpper.text = @"-";
-    self.leftDateLower.text = @"-";
+    self.leftDateUpper.text = nil;
+    self.leftDateLower.text = nil;
     self.conditionImageView.image = nil;
     self.tempHighLabel.text = self.tempLowLabel.text = @"-";
     self.conditionTxtLabel.text = nil;
@@ -106,9 +106,12 @@
     NSCalendar *calendar = [NSCalendar currentCalendar];
     NSCalendarUnit dateUnits = NSCalendarUnitEra | NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay;
     NSDateComponents *dateComponents = [calendar components:dateUnits fromDate:date];
-    NSDate *now = [NSDate date];
-    NSDateComponents *today = [calendar components:dateUnits fromDate:now];
-    NSDateComponents *tomorrow = [calendar components:dateUnits fromDate:[now dateByAddingTimeInterval:24*60*60]];
+    self.leftDateUpper.text = [NSString stringWithFormat:@"%d/%d", dateComponents.month, dateComponents.day];
+    
+    NSDate *dateNow = [NSDate date];
+    NSDate *dateTomorrow = [calendar dateByAddingUnit:NSCalendarUnitDay value:1 toDate:dateNow options:0];
+    NSDateComponents *today = [calendar components:dateUnits fromDate:dateNow];
+    NSDateComponents *tomorrow = [calendar components:dateUnits fromDate:dateTomorrow];
     if([dateComponents isEqual:today]){
         self.leftDateLower.text = @"今天";
         self.leftDateLower.textColor = [UIColor lightGrayColor];
@@ -140,12 +143,12 @@
 
 //    self.conditionImageView.image = dayImageTemplate; //-->
     {
-        [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
             [[self.conditionImageView layer] setTransform:CATransform3DMakeRotation(M_PI/2, 0, 1, 0)]; //+90 degree
             [[self.tempHighLabel layer] setOpacity:0.0];
         } completion:^(BOOL finished) {
             self.conditionImageView.image = dayImageTemplate;
-            [UIView animateWithDuration:1.5 delay:0 usingSpringWithDamping:0.05 initialSpringVelocity:0.8 options:UIViewAnimationOptionCurveEaseIn animations:^{
+            [UIView animateWithDuration:1.5 delay:0 usingSpringWithDamping:0.05 initialSpringVelocity:1.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
                 [[self.conditionImageView layer] setTransform:CATransform3DMakeRotation(M_PI, 0, 1, 0)];
                 [[self.tempHighLabel layer] setOpacity:1.0];
             } completion:^(BOOL finished) {
@@ -209,7 +212,7 @@
     _windSpd = windSpd;
     
     //self.windScaleLabel.text can be set as winSC or windSpd(kMPH)
-    BOOL usingWindkMPH = YES;
+    BOOL usingWindkMPH = NO;
     if(usingWindkMPH){
         NSString *speedString = [windSpd stringValue];
         UIFont *font0 = self.windScaleLabel.font;

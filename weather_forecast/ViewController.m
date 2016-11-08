@@ -63,8 +63,7 @@
     for(int i=0; i<numForecasts + 1; i++){ //n+1 connection lines between forecastViews
         ZZGradientColoredView *connectionLineView = [[ZZGradientColoredView alloc] initWithFrame:CGRectZero];
         connectionLineView.direction = ZZGradientColoredViewDirectionVertical;
-        connectionLineView.colorStart = [UIColor darkGrayColor]; //TODO: in association with temperature
-        connectionLineView.colorEnd = [UIColor grayColor]; //TODO: in association with temperature
+        connectionLineView.colorStart = connectionLineView.colorEnd = [UIColor darkGrayColor];
         
         [self.connectionLineViews addObject:connectionLineView];
         [scrollView addSubview:connectionLineView];
@@ -83,7 +82,7 @@
     self.activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     [[self navigationItem] setRightBarButtonItem:[[UIBarButtonItem alloc] initWithCustomView:self.activityIndicatorView]];
     self.activityIndicatorView.hidesWhenStopped = YES;
-    self.activityIndicatorView.color = [UIColor blueColor];
+//    self.activityIndicatorView.color = [UIColor blueColor];
 }
 
 - (void)viewDidLoad {
@@ -157,7 +156,7 @@
             [self.view addConstraint:[NSLayoutConstraint constraintWithItem:forecastView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:forecastView.superview attribute:NSLayoutAttributeWidth multiplier:1.0 constant:0]];
         }
         
-        const CGFloat connectionLineWidth = 2;
+        const CGFloat connectionLineWidth = 3;
         for(int i=0; i<numForecasts + 1; i++){ //constraints for connectionLineViews
             ZZGradientColoredView *connectionLineView = self.connectionLineViews[i];
             connectionLineView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -269,8 +268,16 @@
 //handle daily forecast
 -(void)weatherDataDidReceivDaylyForecast:(NSArray *)dailyForecast sender:(ZZWeatherDataProvider *)sender
 {
-    if([dailyForecast count] < 7){
-        NSLog(@"--WeatherDataProvider:: Receive Daily Forecast! days=%@", @([dailyForecast count]));
+    //find the highest and lowest temperature in the daily forecast array
+    NSInteger tempHighest = NSIntegerMin;
+    NSInteger tempLowest = NSIntegerMax;
+    for(int i=0; i<MIN(7, [dailyForecast count]); i++){
+        NSInteger tempHigh = [[[dailyForecast[i] objectForKey:@"tmp"] objectForKey:@"max"] integerValue];
+        NSInteger tempLow = [[[dailyForecast[i] objectForKey:@"tmp"] objectForKey:@"min"] integerValue];
+        if(tempHighest < tempHigh)
+            tempHighest = tempHigh;
+        if(tempLowest > tempLow)
+            tempLowest = tempLow;
     }
     
     for(int i=0; i<MIN(7, [dailyForecast count]); i++){
@@ -294,10 +301,8 @@
         CGFloat tempLow = [tmp_min integerValue];
         [forecastView setTemperatureMax:@(tempHigh) min:@(tempLow)];
         
-        CGFloat dayTemp = (tempHigh*0.8 + tempLow*0.2);
-        const CGFloat MIN_TEMP = -10; //TODO: use MIN{dailyForecast.temperature}; instead.
-        const CGFloat MAX_TEMP = 20; //TODO: use MAX{dailyForecast.temperature}; instead.
-        CGFloat hue = (dayTemp - MAX_TEMP) / (MIN_TEMP - MAX_TEMP); //value=[0.0, 1.0]
+        CGFloat tempAvg = tempHigh;
+        CGFloat hue = (tempAvg - tempHighest) / (tempLowest - tempHighest); //value=[0.0, 1.0]
         hue = MIN(MAX(0, hue), 1.0);
         UIColor *colorForTemp = [UIColor colorWithHue:hue saturation:0.6 brightness:1.0 alpha:1.0];
         [self.connectionLineViews[i] setColorEnd:colorForTemp];
@@ -324,8 +329,13 @@
         [formatterOut setLocale:[NSLocale currentLocale]];
 //        NSLog(@"--%d:[%@]: %@-->%@, %@~%@C", i, [formatterOut stringFromDate:forecastDate], cond_txt_d, cond_txt_n, tmp_max, tmp_min);
     }
-    [self.connectionLineViews[0] setColorStart:[self.connectionLineViews[0] colorEnd]];
-    [self.connectionLineViews[[dailyForecast count]] setColorEnd:[self.connectionLineViews[[dailyForecast count]] colorStart]];
+    UIColor *colorStart = [self.connectionLineViews[0] colorEnd];
+//    colorStart = self.connectionLineViews[0].superview.backgroundColor;
+    [self.connectionLineViews[0] setColorStart:colorStart];
+    
+    UIColor *colorEnd = [self.connectionLineViews[[dailyForecast count]] colorStart];
+//    colorEnd = self.connectionLineViews[0].superview.backgroundColor;
+    [self.connectionLineViews[[dailyForecast count]] setColorEnd:colorEnd];
     
 }
 

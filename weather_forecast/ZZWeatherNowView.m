@@ -71,7 +71,7 @@
     [self addSubview:self.lastUpdatedLabel];
     [self addSubview:self.windDirLabel];
     [self addSubview:self.windSCLabel];
-    self.backgroundColor = [UIColor whiteColor]; //default UIView's backgroundColor is nil.
+    self.backgroundColor = [UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:1.0]; //default UIView's backgroundColor is nil.
 
     [self _setupConstaints];
     [self setNeedsUpdateConstraints]; //Important for the -updateConstraints method to be called.

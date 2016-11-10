@@ -106,7 +106,7 @@
     NSCalendar *calendar = [NSCalendar currentCalendar];
     NSCalendarUnit dateUnits = NSCalendarUnitEra | NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay;
     NSDateComponents *dateComponents = [calendar components:dateUnits fromDate:date];
-    self.leftDateUpper.text = [NSString stringWithFormat:@"%d/%d", dateComponents.month, dateComponents.day];
+    self.leftDateUpper.text = [NSString stringWithFormat:@"%@/%@", @(dateComponents.month), @(dateComponents.day)];
     
     NSDate *dateNow = [NSDate date];
     NSDate *dateTomorrow = [calendar dateByAddingUnit:NSCalendarUnitDay value:1 toDate:dateNow options:0];

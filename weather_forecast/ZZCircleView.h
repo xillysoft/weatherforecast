@@ -8,6 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
+IB_DESIGNABLE
 @interface ZZCircleView : UIView
+
+/*! 
+ * circle border color.
+ * Default: lightGray
+ */
+@property(readwrite) IBInspectable UIColor *color;
 
 @end

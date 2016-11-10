@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6116BE3C1DD4694400270CB2 /* ZZAQIDashBoardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6116BE3B1DD4694400270CB2 /* ZZAQIDashBoardView.m */; };
+		6116BE3E1DD46F4400270CB2 /* View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6116BE3D1DD46F4400270CB2 /* View.xib */; };
 		612E8F2C1DD0C89200B09663 /* ZZGradientColoredView.m in Sources */ = {isa = PBXBuildFile; fileRef = 612E8F2B1DD0C89200B09663 /* ZZGradientColoredView.m */; };
 		612FA56C1DC3452500648D17 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 612FA56B1DC3452500648D17 /* main.m */; };
 		612FA56F1DC3452500648D17 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 612FA56E1DC3452500648D17 /* AppDelegate.m */; };
@@ -81,6 +83,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6116BE3A1DD4694400270CB2 /* ZZAQIDashBoardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZZAQIDashBoardView.h; sourceTree = "<group>"; };
+		6116BE3B1DD4694400270CB2 /* ZZAQIDashBoardView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZZAQIDashBoardView.m; sourceTree = "<group>"; };
+		6116BE3D1DD46F4400270CB2 /* View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = View.xib; sourceTree = "<group>"; };
 		612E8F2A1DD0C89200B09663 /* ZZGradientColoredView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZZGradientColoredView.h; sourceTree = "<group>"; };
 		612E8F2B1DD0C89200B09663 /* ZZGradientColoredView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZZGradientColoredView.m; sourceTree = "<group>"; };
 		612FA5671DC3452500648D17 /* weather_forecast.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = weather_forecast.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -248,6 +253,9 @@
 				612FA6141DCC76BE00648D17 /* ZZForecastView.xib */,
 				612FA6161DCC76EC00648D17 /* ZZForecastView.h */,
 				612FA6171DCC76EC00648D17 /* ZZForecastView.m */,
+				6116BE3A1DD4694400270CB2 /* ZZAQIDashBoardView.h */,
+				6116BE3B1DD4694400270CB2 /* ZZAQIDashBoardView.m */,
+				6116BE3D1DD46F4400270CB2 /* View.xib */,
 			);
 			name = weather_ui;
 			sourceTree = "<group>";
@@ -457,6 +465,7 @@
 				612FA5E31DC5A6C100648D17 /* 310.png in Resources */,
 				612FA5D61DC5A6C100648D17 /* 211.png in Resources */,
 				612FA5CF1DC5A6C100648D17 /* 204.png in Resources */,
+				6116BE3E1DD46F4400270CB2 /* View.xib in Resources */,
 				612FA5DE1DC5A6C100648D17 /* 305.png in Resources */,
 				612FA5F01DC5A6C100648D17 /* 501.png in Resources */,
 				612FA5C61DC5A6C100648D17 /* 100.png in Resources */,
@@ -485,6 +494,7 @@
 				612FA61D1DCC78AA00648D17 /* ZZCircleView.m in Sources */,
 				612FA6181DCC76EC00648D17 /* ZZForecastView.m in Sources */,
 				612FA58C1DC36A7100648D17 /* ZZWeatherNowView.m in Sources */,
+				6116BE3C1DD4694400270CB2 /* ZZAQIDashBoardView.m in Sources */,
 				612FA5721DC3452500648D17 /* ViewController.m in Sources */,
 				612FA6041DCB187700648D17 /* ZZCityListViewController.m in Sources */,
 				612E8F2C1DD0C89200B09663 /* ZZGradientColoredView.m in Sources */,

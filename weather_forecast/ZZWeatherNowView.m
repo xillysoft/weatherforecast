@@ -265,7 +265,7 @@
     _aqiQuality = quality;
     _aqiPM25 = pm25;
     _aqiPM10 = pm10;
-//    NSLog(@"--AQI: %@, qlty=%@, pm25=%@, pm10=%@", aqiIndex, quality, pm25, pm10);
+    NSLog(@"--AQI: %@, qlty=%@, pm25=%@, pm10=%@", aqiIndex, quality, pm25, pm10);
     
     //TODO: setting AQI views's contents
 }

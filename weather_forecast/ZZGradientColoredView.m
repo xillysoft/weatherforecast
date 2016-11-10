@@ -25,7 +25,7 @@
 
 -(void)_setupView
 {
-    self.direction = ZZGradientColoredViewDirectionHorizontal;
+    self.direction = ZZGradientColoredViewDirectionAutomatical;
 }
 
 -(void)drawRect:(CGRect)rect
@@ -44,7 +44,15 @@
     CGFloat x0, y0;
     CGFloat x1, y1;
     x0 = bounds.origin.x, y0 = bounds.origin.y;
-    if(self.direction == ZZGradientColoredViewDirectionHorizontal){
+    
+    ZZGradientColoredViewDirection direction;
+    if(self.direction == ZZGradientColoredViewDirectionAutomatical){
+        direction = bounds.size.width > bounds.size.height ? ZZGradientColoredViewDirectionHorizontal : ZZGradientColoredViewDirectionVertical;
+    }else{
+        direction = self.direction;
+    }
+    
+    if(direction == ZZGradientColoredViewDirectionHorizontal){
         x1 = bounds.origin.x + bounds.size.width;
         y1 = y0;
     }else{
@@ -54,7 +62,7 @@
     CGContextDrawLinearGradient(context, gradient, CGPointMake(x0, y0), CGPointMake(x1, y1), kCGGradientDrawsBeforeStartLocation|kCGGradientDrawsAfterEndLocation);
     
     CGGradientRelease(gradient);
-    CFRelease(colorSpace);
+    CFRelease(colors);
     CGColorSpaceRelease(colorSpace);
     
 }

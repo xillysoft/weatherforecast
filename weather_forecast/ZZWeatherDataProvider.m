@@ -48,7 +48,7 @@
     NSURL *baseURL = [NSURL URLWithString:@"https://free-api.heweather.com/x3/"]; //x3 interface, deprecated
     NSString *query = [NSString stringWithFormat:@"weather?cityid=%@&key=%@", _cityId, _authKey]; //x3 interface
     NSURL *url = [NSURL URLWithString:query relativeToURL:baseURL];
-    NSLog(@"--url:: 0=%@\n\t1=%@\n\t2=%@\n\t3=%@\n\t4=%@", url, [url relativePath], [url relativeString], [url absoluteURL], [url absoluteString]);
+//    NSLog(@"--url:: 0=%@\n\t1=%@\n\t2=%@\n\t3=%@\n\t4=%@", url, [url relativePath], [url relativeString], [url absoluteURL], [url absoluteString]);
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     NSOperationQueue *mainQueue = [NSOperationQueue mainQueue];
     [self.delegate weatherDataWillBeginLoading:self];

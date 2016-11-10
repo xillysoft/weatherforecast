@@ -9,15 +9,16 @@
 #import <UIKit/UIKit.h>
 
 typedef NS_ENUM (NSInteger, ZZGradientColoredViewDirection){
+    ZZGradientColoredViewDirectionAutomatical,
     ZZGradientColoredViewDirectionHorizontal,
     ZZGradientColoredViewDirectionVertical
 };
 
-
+IB_DESIGNABLE
 @interface ZZGradientColoredView : UIView
 
-@property(readwrite) ZZGradientColoredViewDirection direction;
-@property(readwrite) UIColor *colorStart;
-@property(readwrite) UIColor *colorEnd;
+@property(readwrite) IBInspectable ZZGradientColoredViewDirection direction;
+@property(readwrite) IBInspectable UIColor *colorStart;
+@property(readwrite) IBInspectable UIColor *colorEnd;
 
 @end

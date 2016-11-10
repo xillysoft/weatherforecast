@@ -68,7 +68,7 @@
                     </variation>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mfs-jQ-PIc">
-                    <rect key="frame" x="163" y="255" width="427" height="90"/>
+                    <rect key="frame" x="163" y="255" width="417" height="90"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="/" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dJL-pG-Qvf">
                             <rect key="frame" x="68" y="22" width="8" height="26"/>
@@ -260,10 +260,11 @@
                 <constraint firstItem="42k-iy-IEv" firstAttribute="height" secondItem="mfs-jQ-PIc" secondAttribute="height" priority="500" id="DUk-Zo-PTH"/>
                 <constraint firstItem="bwm-p8-QBL" firstAttribute="centerY" secondItem="42k-iy-IEv" secondAttribute="centerY" id="Fmm-FT-DXs"/>
                 <constraint firstItem="mfs-jQ-PIc" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="bwm-p8-QBL" secondAttribute="trailing" constant="10" id="GD1-9i-ISW"/>
-                <constraint firstAttribute="trailing" secondItem="mfs-jQ-PIc" secondAttribute="trailing" priority="250" constant="10" id="GXY-gL-qaZ"/>
+                <constraint firstAttribute="trailing" secondItem="mfs-jQ-PIc" secondAttribute="trailing" priority="250" constant="20" id="GXY-gL-qaZ"/>
                 <constraint firstItem="42k-iy-IEv" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="I7T-zd-vcz"/>
                 <constraint firstItem="n4U-u0-cLI" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" priority="250" constant="274" id="KBo-J6-UFi"/>
                 <constraint firstItem="mfs-jQ-PIc" firstAttribute="centerY" secondItem="n4U-u0-cLI" secondAttribute="centerY" id="LMS-JN-mCM"/>
+                <constraint firstItem="42k-iy-IEv" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" id="Lqg-uZ-MXI"/>
                 <constraint firstItem="mfs-jQ-PIc" firstAttribute="top" relation="greaterThanOrEqual" secondItem="iN0-l3-epB" secondAttribute="top" id="WCG-oI-bUX"/>
                 <constraint firstItem="bwm-p8-QBL" firstAttribute="top" relation="greaterThanOrEqual" secondItem="iN0-l3-epB" secondAttribute="top" id="Xrh-qA-Kbv"/>
                 <constraint firstItem="skS-YU-flR" firstAttribute="bottom" secondItem="n4U-u0-cLI" secondAttribute="centerY" id="ZoC-TM-csW"/>
@@ -272,11 +273,10 @@
                 <constraint firstItem="JdQ-ea-7Km" firstAttribute="top" secondItem="bwm-p8-QBL" secondAttribute="centerY" id="omq-Gl-gCP"/>
                 <constraint firstAttribute="bottom" secondItem="bwm-p8-QBL" secondAttribute="bottom" priority="750" id="ouS-Xq-ptg"/>
                 <constraint firstItem="bwm-p8-QBL" firstAttribute="leading" relation="lessThanOrEqual" secondItem="42k-iy-IEv" secondAttribute="trailing" constant="10" id="qCX-uW-Gms"/>
-                <constraint firstItem="42k-iy-IEv" firstAttribute="leading" relation="lessThanOrEqual" secondItem="iN0-l3-epB" secondAttribute="leading" constant="50" id="tWy-lp-cSb"/>
-                <constraint firstItem="42k-iy-IEv" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" priority="250" constant="20" id="uA4-t2-TqN"/>
+                <constraint firstItem="42k-iy-IEv" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" priority="250" constant="50" id="uA4-t2-TqN"/>
                 <constraint firstItem="bwm-p8-QBL" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" priority="750" id="ubs-on-tFb"/>
                 <constraint firstItem="skS-YU-flR" firstAttribute="width" relation="lessThanOrEqual" secondItem="bwm-p8-QBL" secondAttribute="width" id="vyn-kd-M9e"/>
-                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="mfs-jQ-PIc" secondAttribute="trailing" id="yqm-oL-lgh"/>
+                <constraint firstItem="mfs-jQ-PIc" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="iN0-l3-epB" secondAttribute="trailing" constant="-10" id="yqm-oL-lgh"/>
             </constraints>
             <variation key="default">
                 <mask key="constraints">

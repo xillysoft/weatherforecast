@@ -15,6 +15,10 @@
     NSNumber *_pm10;
 }
 
+//default: 0, 500
+@property CGFloat minAQI;
+@property CGFloat maxAQI;
+
 @end
 
 @implementation ZZAQIDashBoardView
@@ -35,10 +39,12 @@
 
 -(void)_initView
 {
-    _aqi = [NSNumber numberWithInt:400];
+    _aqi = [NSNumber numberWithInt:400]; //TODO: test only, remove it.
     _quality = @"轻度污染";
     
     //set default values
+    self.minAQI = 0;
+    self.maxAQI = 500;
     self.width = 40.0;
     self.angle = 90.0;
     self.margin = 5;
@@ -48,9 +54,9 @@
         UIColor *moderate = [UIColor yellowColor];
         UIColor *unhealthyForSensitiveGroups = [UIColor orangeColor];
         UIColor *unhealthy = [UIColor redColor];
-        UIColor *veryUnhealthy = [UIColor purpleColor];
+        UIColor *veryUnhealthy = [UIColor colorWithRed:0.6 green:0.0 blue:0.3 alpha:1.0]; //[UIColor purpleColor]
         UIColor *hazardous = [UIColor colorWithRed:0.5 green:0 blue:0 alpha:1.0];
-        
+     
         @[good, moderate, unhealthyForSensitiveGroups, unhealthy, veryUnhealthy, veryUnhealthy
           , hazardous, hazardous, hazardous, hazardous];
     });
@@ -61,6 +67,10 @@
     _aqi = @(aqiValue);
     [self setNeedsDisplay];
 }
+
+/*!
+ * Set AQI value, quality text, pm25 value, pm10 value.
+ */
 -(void)setAQI:(NSNumber *)aqi quality:(NSString *)quality pm25:(NSNumber *)pm25 pm10:(NSNumber *)pm10
 {
     _aqi = aqi;
@@ -71,63 +81,108 @@
     [self setNeedsDisplay];
 }
 
+-(void)setAngle:(CGFloat)angle
+{
+    _angle = angle;
+    
+    [self setNeedsDisplay];
+}
+
+
+-(void)setWidth:(CGFloat)width
+{
+    _width = width;
+    
+    [self invalidateIntrinsicContentSize];
+    [self setNeedsDisplay];
+}
+
+-(void)setIndicatorSize:(CGFloat)indicatorSize
+{
+    _indicatorSize = indicatorSize;
+    
+    [self invalidateIntrinsicContentSize];
+    [self setNeedsDisplay];
+}
+
+-(void)setMargin:(CGFloat)margin
+{
+    _margin = margin;
+    
+    [self invalidateIntrinsicContentSize];
+    [self setNeedsDisplay];
+}
+
+-(void)setColors:(NSArray<UIColor *> *)colors
+{
+    _colors = colors;
+    
+    [self setNeedsDisplay];
+}
+
 -(void)drawRect:(CGRect)rect
 {
-    const CGFloat minAQI = 0;
-    const CGFloat maxAQI = 500;
+    const CGFloat minAQI = self.minAQI;
+    const CGFloat maxAQI = self.maxAQI;
     
-    CGSize size = rect.size;
-    CGFloat margin = self.margin;
-    CGFloat indicatorSize = self.indicatorSize;
-    CGFloat radiusOuter = MIN(size.width, size.height)/2 - margin - indicatorSize; //outer radius
-    CGFloat radiusInner = radiusOuter - self.width; //inner radius
+    const CGSize size = rect.size;
+    const CGFloat margin = self.margin;
+    const CGFloat indicatorSize = self.indicatorSize;
+    const CGFloat R0 = MAX(0, MIN(size.width, size.height)/2 - margin - indicatorSize); //outer radius
+    const CGFloat R1 = MAX(0, R0 - self.width); //inner radius
     
     CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextTranslateCTM(context, radiusOuter+margin+indicatorSize, radiusOuter+margin+indicatorSize);
-    CGContextScaleCTM(context, 1, -1);
+    CGContextTranslateCTM(context, size.width/2, size.height/2); //move center to: (width/2, height/2)
+    CGContextScaleCTM(context, 1, -1); //flip y- axis
 
-    CGFloat x0 = 0;
-    CGFloat y0 = 0;
-    CGFloat angle = self.angle;
-    CGFloat remainingAngle = 360 - angle;
-    NSUInteger steps = [self.colors count];
+    const CGFloat x0 = 0; //center point
+    const CGFloat y0 = 0;
+    const CGFloat angle = self.angle * M_PI/180; //in radians
+    const CGFloat halfAngle = angle / 2;
+    const CGFloat remainingAngle = 2*M_PI - angle;
+    const NSUInteger numColorSegments = [self.colors count];
     
-    CGFloat deltaAngle = remainingAngle / steps * M_PI/180;
-    CGFloat angle0 = (270-angle/2)*M_PI/180;
-    CGContextSetStrokeColorWithColor(context, [[UIColor darkGrayColor] CGColor]);
-    CGContextSetLineWidth(context, 4);
-    //draw colors segments and units
-    for(int i=0; i<steps; i++){
-        CGFloat angle1 = angle0 - deltaAngle;
-        CGContextAddArc(context, x0, y0, radiusOuter, angle0, angle1, true); //clockwise
-        CGContextAddArc(context, x0, y0, radiusInner, angle1, angle0, false); //anti-closewise
+    const CGFloat angle0 = (1.5*M_PI - halfAngle); //270-angle/2
+    CGFloat segmentAngle0 = angle0;
+    CGFloat segmentAngleStep = remainingAngle / numColorSegments;
+    //draw colors segments
+    CGContextSetLineWidth(context, 1);
+    
+    CGContextSetStrokeColorWithColor(context, [[UIColor grayColor] CGColor]);
+//    CGContextStrokeEllipseInRect(context, CGRectMake(-R0, -R0, 2*R0, 2*R0));
+//    CGContextStrokeEllipseInRect(context, CGRectMake(-R1, -R1, 2*R1, 2*R1));
+    
+    for(int i=0; i<numColorSegments; i++){
+        CGFloat segmentAngle1 = segmentAngle0 - segmentAngleStep;
+        CGContextAddArc(context, x0, y0, R0, segmentAngle0, segmentAngle1, true); //clockwise
+        CGContextAddArc(context, x0, y0, R1, segmentAngle1, segmentAngle0, false); //anti-closewise
         CGContextClosePath(context);
         UIColor *color = [self.colors objectAtIndex:i];
+        CGContextSetStrokeColorWithColor(context, [color CGColor]);
         CGContextSetFillColorWithColor(context, [color CGColor]);
-        CGContextSetLineWidth(context, 0);
-        CGContextDrawPath(context, kCGPathFill);
+        CGContextDrawPath(context, kCGPathFillStroke);
         
-        BOOL drawUnitsAroundCircle = NO;
+        const BOOL drawUnitsAroundCircle = NO;
         if(drawUnitsAroundCircle && i != 0){
             CGContextSaveGState(context);
-            NSInteger numAQISegments = [self.colors count];
-            const CGFloat aqiStep = (maxAQI-minAQI) / numAQISegments;
+            const CGFloat aqiStep = (maxAQI-minAQI) / numColorSegments;
             NSString *unitString = [@(minAQI + aqiStep * i) stringValue];
             
-            CGContextRotateCTM(context, angle0);
+            CGContextRotateCTM(context, segmentAngle0);
             CGContextScaleCTM(context, 1, -1);
             NSDictionary *unitAttributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:14], NSForegroundColorAttributeName: [UIColor grayColor]};
-            [unitString drawAtPoint:CGPointMake(radiusOuter, 0) withAttributes:unitAttributes];
+            [unitString drawAtPoint:CGPointMake(R0, 0) withAttributes:unitAttributes];
             CGContextRestoreGState(context);
         }
-        angle0 -= deltaAngle;
+        segmentAngle0 -= segmentAngleStep;
     }
     
     if(_aqi != nil){
-        CGFloat a = 0.707*radiusInner; //inner rectange inside a circle (with radiusInner)
+        const CGFloat a = 0.707*R1; //inner rectange inside the inner circle
         
-        NSString *aqiString = [_aqi stringValue];
+        const NSString *aqiString = [_aqi stringValue];
         const CGFloat desiredAQIFontSize = 48;
+        const CGFloat minAQIFontSize = 7;
         //adjust font size so that: fontSize.width < 2*a && fontSize.height < 2*a
         CGFloat fontSize = desiredAQIFontSize;
         CGSize textSizeAQI;
@@ -136,14 +191,14 @@
             attributesAQI = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:fontSize]};
             textSizeAQI = [aqiString sizeWithAttributes:attributesAQI];
             fontSize -= 1.0;
-        }while(fontSize>7 && (textSizeAQI.width>2*a || textSizeAQI.height>2*a));
+        }while(fontSize>minAQIFontSize && (textSizeAQI.width>2*a || textSizeAQI.height>2*a));
         
         CGContextScaleCTM(context, 1, -1); //y- flip text
-        NSInteger numAQISegments = [self.colors count];
-        const CGFloat aqiStep = (maxAQI-minAQI) / numAQISegments;
-        NSInteger segmentOfAQI = MIN([_aqi intValue]/aqiStep, numAQISegments-1);
-        UIColor *textColor = [UIColor greenColor]; //TODO: if aqi!=nil, use colors[aqi]
-        textColor = self.colors[segmentOfAQI];
+        const UIColor *textColor = ({ //find color within which AQI is in.
+            const CGFloat aqiStep = (maxAQI-minAQI) / numColorSegments;
+            NSInteger segmentOfAQI = MIN([_aqi intValue]/aqiStep, numColorSegments-1);
+            self.colors[segmentOfAQI];
+        });
         
         [aqiString drawAtPoint:CGPointMake(x0-textSizeAQI.width/2, y0-textSizeAQI.height/2) withAttributes:
          @{NSFontAttributeName: [UIFont boldSystemFontOfSize:fontSize], NSForegroundColorAttributeName: textColor}];
@@ -151,59 +206,33 @@
         if(_quality != nil){
             NSDictionary *attributesQuality = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:18], NSForegroundColorAttributeName: [UIColor lightGrayColor]};
             CGSize textSizeQuality = [_quality sizeWithAttributes:attributesQuality];
-            CGFloat padding = 0;
-            [_quality drawAtPoint:CGPointMake(x0-textSizeQuality.width/2, y0+textSizeAQI.height/2+textSizeQuality.height/2+padding) withAttributes:attributesQuality];
+            CGFloat vPadding = 0;
+            [_quality drawAtPoint:CGPointMake(x0-textSizeQuality.width/2, y0+textSizeAQI.height/2+textSizeQuality.height/2+vPadding) withAttributes:attributesQuality];
         }
         
         //draw indicator around outer circle
         {
             CGFloat aqi = MIN(MAX(minAQI, [_aqi floatValue]), maxAQI); //clamp to [minAQI, maxAQI]
-            CGFloat A0 = (270 - angle/2)*M_PI/180;
-            CGFloat A1 = (-90 + angle/2)*M_PI/180;
+            CGFloat A0 = (1.5*M_PI - halfAngle);
+            CGFloat A1 = (-M_PI/2 + halfAngle);
             CGFloat indicatorAngle = (aqi - minAQI)/(maxAQI - minAQI) * (A1-A0) + A0;
             CGContextScaleCTM(context, 1, -1);
             CGContextRotateCTM(context, indicatorAngle);
             
             CGContextSetFillColorWithColor(context, [[UIColor lightGrayColor] CGColor]);
-            CGContextMoveToPoint(context, radiusOuter, 0);
-            CGContextAddLineToPoint(context, radiusOuter + indicatorSize, indicatorSize);
-            CGContextAddLineToPoint(context, radiusOuter + indicatorSize, -indicatorSize);
+            CGContextMoveToPoint(context, R0, 0);
+            CGContextAddLineToPoint(context, R0 + indicatorSize, indicatorSize);
+            CGContextAddLineToPoint(context, R0 + indicatorSize, -indicatorSize);
             CGContextClosePath(context);
             CGContextFillPath(context);
             
-            CGContextMoveToPoint(context, radiusInner, 0);
-            CGContextAddLineToPoint(context, radiusInner - indicatorSize, indicatorSize);
-            CGContextAddLineToPoint(context, radiusInner - indicatorSize, -indicatorSize);
+            CGContextMoveToPoint(context, R1, 0);
+            CGContextAddLineToPoint(context, R1 - indicatorSize, indicatorSize);
+            CGContextAddLineToPoint(context, R1 - indicatorSize, -indicatorSize);
             CGContextClosePath(context);
             CGContextFillPath(context);
         }
     }
-}
-
--(void)setWidth:(CGFloat)width
-{
-    _width = width;
-    [self invalidateIntrinsicContentSize];
-    [self setNeedsDisplay];
-}
-
--(void)setMargin:(CGFloat)margin
-{
-    _margin = margin;
-    [self invalidateIntrinsicContentSize];
-    [self setNeedsDisplay];
-}
-
--(void)setIndicatorSize:(CGFloat)indicatorSize
-{
-    _indicatorSize = indicatorSize;
-    [self invalidateIntrinsicContentSize];
-    [self setNeedsDisplay];
-}
--(void)setColors:(NSArray<UIColor *> *)colors
-{
-    _colors = colors;
-    [self setNeedsDisplay];
 }
 
 -(CGSize)intrinsicContentSize

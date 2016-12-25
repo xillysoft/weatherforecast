@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		6116BE3C1DD4694400270CB2 /* ZZAQIDashBoardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6116BE3B1DD4694400270CB2 /* ZZAQIDashBoardView.m */; };
 		6116BE3E1DD46F4400270CB2 /* View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6116BE3D1DD46F4400270CB2 /* View.xib */; };
+		6116BE411DD74C3900270CB2 /* TestView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6116BE401DD74C3900270CB2 /* TestView.m */; };
+		6116BE441DD80F5E00270CB2 /* test.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6116BE431DD80F5E00270CB2 /* test.jpg */; };
 		612E8F2C1DD0C89200B09663 /* ZZGradientColoredView.m in Sources */ = {isa = PBXBuildFile; fileRef = 612E8F2B1DD0C89200B09663 /* ZZGradientColoredView.m */; };
 		612FA56C1DC3452500648D17 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 612FA56B1DC3452500648D17 /* main.m */; };
 		612FA56F1DC3452500648D17 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 612FA56E1DC3452500648D17 /* AppDelegate.m */; };
@@ -86,6 +88,9 @@
 		6116BE3A1DD4694400270CB2 /* ZZAQIDashBoardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZZAQIDashBoardView.h; sourceTree = "<group>"; };
 		6116BE3B1DD4694400270CB2 /* ZZAQIDashBoardView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZZAQIDashBoardView.m; sourceTree = "<group>"; };
 		6116BE3D1DD46F4400270CB2 /* View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = View.xib; sourceTree = "<group>"; };
+		6116BE3F1DD74C3900270CB2 /* TestView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestView.h; sourceTree = "<group>"; };
+		6116BE401DD74C3900270CB2 /* TestView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestView.m; sourceTree = "<group>"; };
+		6116BE431DD80F5E00270CB2 /* test.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = test.jpg; sourceTree = "<group>"; };
 		612E8F2A1DD0C89200B09663 /* ZZGradientColoredView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZZGradientColoredView.h; sourceTree = "<group>"; };
 		612E8F2B1DD0C89200B09663 /* ZZGradientColoredView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZZGradientColoredView.m; sourceTree = "<group>"; };
 		612FA5671DC3452500648D17 /* weather_forecast.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = weather_forecast.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -181,6 +186,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6116BE421DD80F3900270CB2 /* resources */ = {
+			isa = PBXGroup;
+			children = (
+				6116BE431DD80F5E00270CB2 /* test.jpg */,
+			);
+			name = resources;
+			sourceTree = "<group>";
+		};
 		612FA55E1DC3452500648D17 = {
 			isa = PBXGroup;
 			children = (
@@ -200,6 +213,7 @@
 		612FA5691DC3452500648D17 /* weather_forecast */ = {
 			isa = PBXGroup;
 			children = (
+				6116BE421DD80F3900270CB2 /* resources */,
 				612FA6191DCC788F00648D17 /* utilities */,
 				612FA5811DC3465900648D17 /* weather */,
 				612FA56D1DC3452500648D17 /* AppDelegate.h */,
@@ -256,6 +270,8 @@
 				6116BE3A1DD4694400270CB2 /* ZZAQIDashBoardView.h */,
 				6116BE3B1DD4694400270CB2 /* ZZAQIDashBoardView.m */,
 				6116BE3D1DD46F4400270CB2 /* View.xib */,
+				6116BE3F1DD74C3900270CB2 /* TestView.h */,
+				6116BE401DD74C3900270CB2 /* TestView.m */,
 			);
 			name = weather_ui;
 			sourceTree = "<group>";
@@ -475,6 +491,7 @@
 				612FA60F1DCB8DB000648D17 /* icon_pop.png in Resources */,
 				612FA6131DCBA77D00648D17 /* citylist_allchina.json in Resources */,
 				612FA5EC1DC5A6C100648D17 /* 405.png in Resources */,
+				6116BE441DD80F5E00270CB2 /* test.jpg in Resources */,
 				612FA5CD1DC5A6C100648D17 /* 202.png in Resources */,
 				612FA5FA1DC5A6C100648D17 /* __weather_icons.json in Resources */,
 				612FA5E51DC5A6C100648D17 /* 312.png in Resources */,
@@ -489,6 +506,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6116BE411DD74C3900270CB2 /* TestView.m in Sources */,
 				612FA5871DC35DAB00648D17 /* ZZWeather.m in Sources */,
 				612FA5841DC346A500648D17 /* ZZWeatherDataProvider.m in Sources */,
 				612FA61D1DCC78AA00648D17 /* ZZCircleView.m in Sources */,

@@ -62,6 +62,7 @@
     });
 }
 
+//test only, remove it
 -(void)setAqiValue:(CGFloat)aqiValue
 {
     _aqi = @(aqiValue);
@@ -125,7 +126,7 @@
     const CGFloat minAQI = self.minAQI;
     const CGFloat maxAQI = self.maxAQI;
     
-    const CGSize size = rect.size;
+    const CGSize size = self.bounds.size;
     const CGFloat margin = self.margin;
     const CGFloat indicatorSize = self.indicatorSize;
     const CGFloat R0 = MAX(0, MIN(size.width, size.height)/2 - margin - indicatorSize); //outer radius
@@ -145,13 +146,9 @@
     const CGFloat angle0 = (1.5*M_PI - halfAngle); //270-angle/2
     CGFloat segmentAngle0 = angle0;
     CGFloat segmentAngleStep = remainingAngle / numColorSegments;
-    //draw colors segments
+    
+    // Draw colors segments
     CGContextSetLineWidth(context, 1);
-    
-    CGContextSetStrokeColorWithColor(context, [[UIColor grayColor] CGColor]);
-//    CGContextStrokeEllipseInRect(context, CGRectMake(-R0, -R0, 2*R0, 2*R0));
-//    CGContextStrokeEllipseInRect(context, CGRectMake(-R1, -R1, 2*R1, 2*R1));
-    
     for(int i=0; i<numColorSegments; i++){
         CGFloat segmentAngle1 = segmentAngle0 - segmentAngleStep;
         CGContextAddArc(context, x0, y0, R0, segmentAngle0, segmentAngle1, true); //clockwise
@@ -177,6 +174,7 @@
         segmentAngle0 -= segmentAngleStep;
     }
     
+    // Draw AQI value
     if(_aqi != nil){
         const CGFloat a = 0.707*R1; //inner rectange inside the inner circle
         
@@ -202,7 +200,7 @@
         
         [aqiString drawAtPoint:CGPointMake(x0-textSizeAQI.width/2, y0-textSizeAQI.height/2) withAttributes:
          @{NSFontAttributeName: [UIFont boldSystemFontOfSize:fontSize], NSForegroundColorAttributeName: textColor}];
-        
+
         if(_quality != nil){
             NSDictionary *attributesQuality = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:18], NSForegroundColorAttributeName: [UIColor lightGrayColor]};
             CGSize textSizeQuality = [_quality sizeWithAttributes:attributesQuality];
@@ -215,9 +213,9 @@
             CGFloat aqi = MIN(MAX(minAQI, [_aqi floatValue]), maxAQI); //clamp to [minAQI, maxAQI]
             CGFloat A0 = (1.5*M_PI - halfAngle);
             CGFloat A1 = (-M_PI/2 + halfAngle);
-            CGFloat indicatorAngle = (aqi - minAQI)/(maxAQI - minAQI) * (A1-A0) + A0;
+            CGFloat indicatorAngleForAQI = (aqi - minAQI)/(maxAQI - minAQI) * (A1-A0) + A0;
             CGContextScaleCTM(context, 1, -1);
-            CGContextRotateCTM(context, indicatorAngle);
+            CGContextRotateCTM(context, indicatorAngleForAQI);
             
             CGContextSetFillColorWithColor(context, [[UIColor lightGrayColor] CGColor]);
             CGContextMoveToPoint(context, R0, 0);

@@ -13,17 +13,27 @@
             <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fj6-2u-aQF" customClass="ZZAQIDashBoardView">
-                    <rect key="frame" x="13" y="150" width="554" height="289"/>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ank-Wx-Wj8" customClass="TestView">
+                    <rect key="frame" x="59" y="30" width="300" height="200"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="200" id="Y1L-kF-IbF"/>
+                        <constraint firstAttribute="width" constant="300" id="ioA-12-8VQ"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fj6-2u-aQF" customClass="ZZAQIDashBoardView">
+                    <rect key="frame" x="150" y="250" width="300" height="260"/>
                     <color key="backgroundColor" red="0.20000000300000001" green="0.20000000300000001" blue="0.20000000300000001" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="fj6-2u-aQF" secondAttribute="height" multiplier="1:1" priority="500" id="0EW-06-qtM"/>
                         <constraint firstAttribute="width" constant="250" id="5Jy-St-joT"/>
+                        <constraint firstAttribute="height" constant="260" id="QNQ-hg-u07"/>
                         <constraint firstAttribute="height" constant="450" id="Vmf-ya-Chs"/>
+                        <constraint firstAttribute="width" constant="300" id="hCR-Jm-9Xf"/>
                     </constraints>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="number" keyPath="aqiValue">
-                            <real key="value" value="32"/>
+                            <real key="value" value="128"/>
                         </userDefinedRuntimeAttribute>
                         <userDefinedRuntimeAttribute type="number" keyPath="margin">
                             <real key="value" value="20"/>
@@ -43,11 +53,14 @@
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="fj6-2u-aQF" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="137" id="0Yd-JI-wag"/>
+                <constraint firstItem="Ank-Wx-Wj8" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="30" id="AOo-MD-7bx"/>
                 <constraint firstItem="fj6-2u-aQF" firstAttribute="height" secondItem="iN0-l3-epB" secondAttribute="height" priority="1" id="BTj-cI-kN4"/>
                 <constraint firstItem="fj6-2u-aQF" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" multiplier="0.75" id="Dqw-XR-6sm"/>
-                <constraint firstItem="fj6-2u-aQF" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="IJy-Si-wex"/>
+                <constraint firstItem="fj6-2u-aQF" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" priority="250" id="IJy-Si-wex"/>
+                <constraint firstItem="fj6-2u-aQF" firstAttribute="top" secondItem="Ank-Wx-Wj8" secondAttribute="bottom" constant="20" id="IOH-Fs-aH3"/>
+                <constraint firstItem="Ank-Wx-Wj8" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="59" id="KK8-Yp-ulv"/>
                 <constraint firstItem="fj6-2u-aQF" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="195" id="Rmr-kF-FAZ"/>
-                <constraint firstItem="fj6-2u-aQF" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="SrC-Jf-SKI"/>
+                <constraint firstItem="fj6-2u-aQF" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" priority="250" id="SrC-Jf-SKI"/>
                 <constraint firstAttribute="bottom" secondItem="fj6-2u-aQF" secondAttribute="bottom" constant="124" id="hML-XJ-wjc"/>
                 <constraint firstAttribute="trailing" secondItem="fj6-2u-aQF" secondAttribute="trailing" constant="66" id="ogh-0j-8vH"/>
             </constraints>
@@ -60,6 +73,7 @@
                     <exclude reference="ogh-0j-8vH"/>
                 </mask>
             </variation>
+            <point key="canvasLocation" x="519" y="256"/>
         </view>
     </objects>
 </document>

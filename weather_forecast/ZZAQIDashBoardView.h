@@ -27,6 +27,7 @@ IB_DESIGNABLE
 @property(nonatomic) IBInspectable CGFloat angle;
 
 /*!
+ * with of the circle
  * default value: 40 points
  */
 @property(nonatomic) IBInspectable CGFloat width;

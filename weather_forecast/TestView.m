@@ -8,7 +8,7 @@
 
 #import "TestView.h"
 
-@interface TestViewLayerDelegate : NSObject
+@interface TestViewLayerDelegate : NSObject <CALayerDelegate>
 @property UIImage *image;
 @end
 
@@ -17,7 +17,6 @@
 -(void)displayLayer:(CALayer *)layer
 {
     if(self.image == nil){
-        [super displayLayer:layer];
         return ;
     }
     layer.contents = (__bridge id)[self.image CGImage];

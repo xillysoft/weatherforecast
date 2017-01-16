@@ -13,6 +13,11 @@
     NSString *_quality;
     NSNumber *_pm25;
     NSNumber *_pm10;
+    
+    NSMutableArray<CAShapeLayer *> *_coloredSegmentLayers;
+    CAShapeLayer *_indicatorLayer;
+    CATextLayer *_aqiTextLayer;
+    CATextLayer *_qualityTextLayer;
 }
 
 //default: 0, 500
@@ -37,6 +42,62 @@
     return self;
 }
 
+-(void)layoutSublayersOfLayer:(CALayer *)layer
+{
+    [self _resizeLayers];
+}
+
+-(void)_resizeLayers
+{
+    CGRect bounds = self.bounds;
+    CGSize size = bounds.size;
+    for(CALayer *sublayer in self.layer.sublayers){
+        sublayer.frame = bounds;
+    }
+
+    [self _generateIndicatorShapePath:size];
+    
+}
+
+
+-(void)_generateIndicatorShapePath:(CGSize)size
+{
+    _indicatorLayer.path = ({ //re-generate path with -bounds
+        UIBezierPath *path = [UIBezierPath bezierPath];
+        {
+            const CGFloat indicatorSize = self.indicatorSize;
+            const CGFloat margin = self.margin;
+            const CGFloat R0 = MAX(0, MIN(size.width, size.height)/2 - margin - indicatorSize); //outer radius
+            const CGFloat R1 = MAX(0, R0 - self.width); //inner radius
+            const CGFloat angle = self.angle * M_PI/180; //in radians
+            const CGFloat halfAngle = angle / 2;
+            
+            //draw indicator around outer circle
+            {
+                //outer triangle at 0 degree
+                [path moveToPoint:CGPointMake(R0, 0)];
+                [path addLineToPoint:CGPointMake(R0 + indicatorSize, indicatorSize)];
+                [path addLineToPoint:CGPointMake(R0 + indicatorSize, -indicatorSize)];
+                [path closePath];
+                //inner triangle at 0 degree
+                [path moveToPoint:CGPointMake(R1, 0)];
+                [path addLineToPoint:CGPointMake(R1 - indicatorSize, indicatorSize)];
+                [path addLineToPoint:CGPointMake(R1 - indicatorSize, -indicatorSize)];
+                
+                CGFloat A0 = (1.5*M_PI - halfAngle); //angle when aqi=minAQI
+                //                    CGFloat A1 = (-M_PI/2 + halfAngle); //angle for aqi=maxAQI
+                CGAffineTransform t = CGAffineTransformIdentity;
+                t = CGAffineTransformRotate(t, A0);
+                t = CGAffineTransformScale(t, 1, -1);
+                t = CGAffineTransformMakeTranslation(-size.width/2, -size.height/2);
+                [path applyTransform:t];
+            }
+        }
+        [path CGPath];
+    });
+}
+
+
 -(void)_initView
 {
     _aqi = [NSNumber numberWithInt:400]; //TODO: test only, remove it.
@@ -60,7 +121,32 @@
         @[good, moderate, unhealthyForSensitiveGroups, unhealthy, veryUnhealthy, veryUnhealthy
           , hazardous, hazardous, hazardous, hazardous];
     });
+    
+    NSUInteger numberOfColors = [self.colors count];
+    _coloredSegmentLayers = [[NSMutableArray alloc] initWithCapacity:numberOfColors];
+    for(NSUInteger i=0; i<numberOfColors; i++){
+        _coloredSegmentLayers[i] = [CAShapeLayer layer];
+        [self.layer addSublayer:_coloredSegmentLayers[i]];
+    }
+    
+    _indicatorLayer = ({
+        CAShapeLayer *indicator = [CAShapeLayer layer];
+        [indicator setFillColor:[[UIColor redColor] CGColor]];
+        [indicator setStrokeColor:[[UIColor greenColor] CGColor]];
+        [indicator setLineWidth:4];
+        [indicator setLineJoin:kCALineJoinRound];
+        indicator;
+    });
+    [self.layer addSublayer:_indicatorLayer];
+    
+    _aqiTextLayer = [CATextLayer layer];
+    [self.layer addSublayer:_aqiTextLayer];
+    
+    _qualityTextLayer = [CATextLayer layer];
+    [self.layer addSublayer:_qualityTextLayer];
+    
 }
+
 
 //test only, remove it
 -(void)setAqiValue:(CGFloat)aqiValue

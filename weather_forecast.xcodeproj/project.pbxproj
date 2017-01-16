@@ -82,6 +82,7 @@
 		612FA6181DCC76EC00648D17 /* ZZForecastView.m in Sources */ = {isa = PBXBuildFile; fileRef = 612FA6171DCC76EC00648D17 /* ZZForecastView.m */; };
 		612FA61D1DCC78AA00648D17 /* ZZCircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 612FA61C1DCC78AA00648D17 /* ZZCircleView.m */; };
 		612FA6211DCDE0D600648D17 /* icon_humidity_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 612FA6201DCDE0D600648D17 /* icon_humidity_1.png */; };
+		61ED48D11E2CD4DC00E27111 /* ZZAQIDashBoardView2.m in Sources */ = {isa = PBXBuildFile; fileRef = 61ED48D01E2CD4DC00E27111 /* ZZAQIDashBoardView2.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -173,6 +174,8 @@
 		612FA61B1DCC78AA00648D17 /* ZZCircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZZCircleView.h; sourceTree = "<group>"; };
 		612FA61C1DCC78AA00648D17 /* ZZCircleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZZCircleView.m; sourceTree = "<group>"; };
 		612FA6201DCDE0D600648D17 /* icon_humidity_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_humidity_1.png; sourceTree = "<group>"; };
+		61ED48CF1E2CD4DC00E27111 /* ZZAQIDashBoardView2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZZAQIDashBoardView2.h; sourceTree = "<group>"; };
+		61ED48D01E2CD4DC00E27111 /* ZZAQIDashBoardView2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZZAQIDashBoardView2.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -269,6 +272,8 @@
 				612FA6171DCC76EC00648D17 /* ZZForecastView.m */,
 				6116BE3A1DD4694400270CB2 /* ZZAQIDashBoardView.h */,
 				6116BE3B1DD4694400270CB2 /* ZZAQIDashBoardView.m */,
+				61ED48CF1E2CD4DC00E27111 /* ZZAQIDashBoardView2.h */,
+				61ED48D01E2CD4DC00E27111 /* ZZAQIDashBoardView2.m */,
 				6116BE3D1DD46F4400270CB2 /* View.xib */,
 				6116BE3F1DD74C3900270CB2 /* TestView.h */,
 				6116BE401DD74C3900270CB2 /* TestView.m */,
@@ -402,11 +407,12 @@
 		612FA55F1DC3452500648D17 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0730;
+				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = "Zhao Xiaojian";
 				TargetAttributes = {
 					612FA5661DC3452500648D17 = {
 						CreatedOnToolsVersion = 7.3;
+						DevelopmentTeam = 9X6S4A8J8Y;
 					};
 				};
 			};
@@ -516,6 +522,7 @@
 				612FA5721DC3452500648D17 /* ViewController.m in Sources */,
 				612FA6041DCB187700648D17 /* ZZCityListViewController.m in Sources */,
 				612E8F2C1DD0C89200B09663 /* ZZGradientColoredView.m in Sources */,
+				61ED48D11E2CD4DC00E27111 /* ZZAQIDashBoardView2.m in Sources */,
 				612FA56F1DC3452500648D17 /* AppDelegate.m in Sources */,
 				612FA56C1DC3452500648D17 /* main.m in Sources */,
 			);
@@ -549,8 +556,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -572,7 +581,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -594,8 +603,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -611,7 +622,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -623,6 +634,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 9X6S4A8J8Y;
 				INFOPLIST_FILE = weather_forecast/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.xillysoft.weather-forecast";
@@ -634,6 +646,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 9X6S4A8J8Y;
 				INFOPLIST_FILE = weather_forecast/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.xillysoft.weather-forecast";

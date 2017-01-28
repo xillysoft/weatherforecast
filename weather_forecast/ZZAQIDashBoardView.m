@@ -1,39 +1,29 @@
 //
-//  ZZAQIView.m
+//  ZZAQIDashBoardView2.m
 //  weather_forecast
 //
-//  Created by zhaoxiaojian on 11/10/16.
-//  Copyright © 2016 Zhao Xiaojian. All rights reserved.
+//  Created by zhaoxiaojian on 1/16/17.
+//  Copyright © 2017 Zhao Xiaojian. All rights reserved.
 //
 
 #import "ZZAQIDashBoardView.h"
+#import <CoreText/CoreText.h>
 
-@interface ZZAQIDashBoardView(){
-    NSNumber *_aqi;
-    NSString *_quality;
-    NSNumber *_pm25;
-    NSNumber *_pm10;
-    
-    NSMutableArray<CAShapeLayer *> *_coloredSegmentLayers;
-    CAShapeLayer *_indicatorLayer;
-    CATextLayer *_aqiTextLayer;
-    CATextLayer *_qualityTextLayer;
+@interface ZZAQIDashBoardView() {
+    CGFloat _minAQIValue;
+    CGFloat _maxAQIValue;
 }
+@property NSArray<UIColor *> *colors;
+@property CALayer *coloredSegmentLayer;
 
-//default: 0, 500
-@property CGFloat minAQI;
-@property CGFloat maxAQI;
+@property CAShapeLayer *aqiMarkLayer;
+@property CATextLayer *aqiTextLayer;
+@property CATextLayer *aqiQualityLayer;
 
 @end
 
-@implementation ZZAQIDashBoardView
 
--(instancetype)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    [self _initView];
-    return self;
-}
+@implementation ZZAQIDashBoardView2
 
 -(instancetype)initWithCoder:(NSCoder *)aDecoder
 {
@@ -42,74 +32,15 @@
     return self;
 }
 
--(void)layoutSublayersOfLayer:(CALayer *)layer
+-(instancetype)initWithFrame:(CGRect)frame
 {
-    [self _resizeLayers];
+    self = [super initWithFrame:frame];
+    [self _initView];
+    return self;
 }
-
--(void)_resizeLayers
-{
-    CGRect bounds = self.bounds;
-    CGSize size = bounds.size;
-    for(CALayer *sublayer in self.layer.sublayers){
-        sublayer.frame = bounds;
-    }
-
-    [self _generateIndicatorShapePath:size];
-    
-}
-
-
--(void)_generateIndicatorShapePath:(CGSize)size
-{
-    _indicatorLayer.path = ({ //re-generate path with -bounds
-        UIBezierPath *path = [UIBezierPath bezierPath];
-        {
-            const CGFloat indicatorSize = self.indicatorSize;
-            const CGFloat margin = self.margin;
-            const CGFloat R0 = MAX(0, MIN(size.width, size.height)/2 - margin - indicatorSize); //outer radius
-            const CGFloat R1 = MAX(0, R0 - self.width); //inner radius
-            const CGFloat angle = self.angle * M_PI/180; //in radians
-            const CGFloat halfAngle = angle / 2;
-            
-            //draw indicator around outer circle
-            {
-                //outer triangle at 0 degree
-                [path moveToPoint:CGPointMake(R0, 0)];
-                [path addLineToPoint:CGPointMake(R0 + indicatorSize, indicatorSize)];
-                [path addLineToPoint:CGPointMake(R0 + indicatorSize, -indicatorSize)];
-                [path closePath];
-                //inner triangle at 0 degree
-                [path moveToPoint:CGPointMake(R1, 0)];
-                [path addLineToPoint:CGPointMake(R1 - indicatorSize, indicatorSize)];
-                [path addLineToPoint:CGPointMake(R1 - indicatorSize, -indicatorSize)];
-                
-                CGFloat A0 = (1.5*M_PI - halfAngle); //angle when aqi=minAQI
-                //                    CGFloat A1 = (-M_PI/2 + halfAngle); //angle for aqi=maxAQI
-                CGAffineTransform t = CGAffineTransformIdentity;
-                t = CGAffineTransformRotate(t, A0);
-                t = CGAffineTransformScale(t, 1, -1);
-                t = CGAffineTransformMakeTranslation(-size.width/2, -size.height/2);
-                [path applyTransform:t];
-            }
-        }
-        [path CGPath];
-    });
-}
-
 
 -(void)_initView
 {
-    _aqi = [NSNumber numberWithInt:400]; //TODO: test only, remove it.
-    _quality = @"轻度污染";
-    
-    //set default values
-    self.minAQI = 0;
-    self.maxAQI = 500;
-    self.width = 40.0;
-    self.angle = 90.0;
-    self.margin = 5;
-    self.indicatorSize = 10;
     self.colors = ({
         UIColor *good = [UIColor greenColor];
         UIColor *moderate = [UIColor yellowColor];
@@ -117,215 +48,255 @@
         UIColor *unhealthy = [UIColor redColor];
         UIColor *veryUnhealthy = [UIColor colorWithRed:0.6 green:0.0 blue:0.3 alpha:1.0]; //[UIColor purpleColor]
         UIColor *hazardous = [UIColor colorWithRed:0.5 green:0 blue:0 alpha:1.0];
-     
+        
         @[good, moderate, unhealthyForSensitiveGroups, unhealthy, veryUnhealthy, veryUnhealthy
           , hazardous, hazardous, hazardous, hazardous];
     });
+    _circleWidth = 40.0; //initial circle width
+    _blankAngle = M_PI/2; //initial blank angle (90 degrees)
     
-    NSUInteger numberOfColors = [self.colors count];
-    _coloredSegmentLayers = [[NSMutableArray alloc] initWithCapacity:numberOfColors];
-    for(NSUInteger i=0; i<numberOfColors; i++){
-        _coloredSegmentLayers[i] = [CAShapeLayer layer];
-        [self.layer addSublayer:_coloredSegmentLayers[i]];
-    }
     
-    _indicatorLayer = ({
-        CAShapeLayer *indicator = [CAShapeLayer layer];
-        [indicator setFillColor:[[UIColor redColor] CGColor]];
-        [indicator setStrokeColor:[[UIColor greenColor] CGColor]];
-        [indicator setLineWidth:4];
-        [indicator setLineJoin:kCALineJoinRound];
-        indicator;
-    });
-    [self.layer addSublayer:_indicatorLayer];
+    _minAQIValue = 0.0;
+    _maxAQIValue = 500.0;
+    _aqiMarkSize = _circleWidth / 3; //initial aqi mark size
     
-    _aqiTextLayer = [CATextLayer layer];
-    [self.layer addSublayer:_aqiTextLayer];
+//    self.layer.borderColor = [[UIColor grayColor] CGColor];
+//    self.layer.borderWidth = 1.0;
+    self.backgroundColor = [UIColor lightGrayColor];
     
-    _qualityTextLayer = [CATextLayer layer];
-    [self.layer addSublayer:_qualityTextLayer];
-    
-}
+    {//create coloredSegmentLayer
+        self.coloredSegmentLayer = [CALayer layer];
+        [self.layer addSublayer:self.coloredSegmentLayer];
+        self.coloredSegmentLayer.shadowOpacity = 0.5;
+        self.coloredSegmentLayer.shadowOffset = CGSizeMake(5, 5);
+        self.coloredSegmentLayer.shadowRadius = 8;
+//        self.coloredSegmentLayer.borderColor = [[UIColor blueColor] CGColor];
+//        self.coloredSegmentLayer.borderWidth = 1.0;
+        for(UIColor *color in self.colors){
+            CAShapeLayer *shapeLayer = [CAShapeLayer layer];
+            [self.coloredSegmentLayer addSublayer:shapeLayer];
+            shapeLayer.fillColor = [[UIColor clearColor] CGColor];
+            shapeLayer.strokeColor = [color CGColor];
+            shapeLayer.lineWidth = self.circleWidth;
+//            shapeLayer.lineCap = kCALineCapRound;
+            shapeLayer.contentsScale = [[UIScreen mainScreen] scale];
 
-
-//test only, remove it
--(void)setAqiValue:(CGFloat)aqiValue
-{
-    _aqi = @(aqiValue);
-    [self setNeedsDisplay];
-}
-
-/*!
- * Set AQI value, quality text, pm25 value, pm10 value.
- */
--(void)setAQI:(NSNumber *)aqi quality:(NSString *)quality pm25:(NSNumber *)pm25 pm10:(NSNumber *)pm10
-{
-    _aqi = aqi;
-    _quality = quality;
-    _pm25 = pm25;
-    _pm10 = pm10;
-    
-    [self setNeedsDisplay];
-}
-
--(void)setAngle:(CGFloat)angle
-{
-    _angle = angle;
-    
-    [self setNeedsDisplay];
-}
-
-
--(void)setWidth:(CGFloat)width
-{
-    _width = width;
-    
-    [self invalidateIntrinsicContentSize];
-    [self setNeedsDisplay];
-}
-
--(void)setIndicatorSize:(CGFloat)indicatorSize
-{
-    _indicatorSize = indicatorSize;
-    
-    [self invalidateIntrinsicContentSize];
-    [self setNeedsDisplay];
-}
-
--(void)setMargin:(CGFloat)margin
-{
-    _margin = margin;
-    
-    [self invalidateIntrinsicContentSize];
-    [self setNeedsDisplay];
-}
-
--(void)setColors:(NSArray<UIColor *> *)colors
-{
-    _colors = colors;
-    
-    [self setNeedsDisplay];
-}
-
--(void)drawRect:(CGRect)rect
-{
-    const CGFloat minAQI = self.minAQI;
-    const CGFloat maxAQI = self.maxAQI;
-    
-    const CGSize size = self.bounds.size;
-    const CGFloat margin = self.margin;
-    const CGFloat indicatorSize = self.indicatorSize;
-    const CGFloat R0 = MAX(0, MIN(size.width, size.height)/2 - margin - indicatorSize); //outer radius
-    const CGFloat R1 = MAX(0, R0 - self.width); //inner radius
-    
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextTranslateCTM(context, size.width/2, size.height/2); //move center to: (width/2, height/2)
-    CGContextScaleCTM(context, 1, -1); //flip y- axis
-
-    const CGFloat x0 = 0; //center point
-    const CGFloat y0 = 0;
-    const CGFloat angle = self.angle * M_PI/180; //in radians
-    const CGFloat halfAngle = angle / 2;
-    const CGFloat remainingAngle = 2*M_PI - angle;
-    const NSUInteger numColorSegments = [self.colors count];
-    
-    const CGFloat angle0 = (1.5*M_PI - halfAngle); //270-angle/2
-    CGFloat segmentAngle0 = angle0;
-    CGFloat segmentAngleStep = remainingAngle / numColorSegments;
-    
-    // Draw colors segments
-    CGContextSetLineWidth(context, 1);
-    for(int i=0; i<numColorSegments; i++){
-        CGFloat segmentAngle1 = segmentAngle0 - segmentAngleStep;
-        CGContextAddArc(context, x0, y0, R0, segmentAngle0, segmentAngle1, true); //clockwise
-        CGContextAddArc(context, x0, y0, R1, segmentAngle1, segmentAngle0, false); //anti-closewise
-        CGContextClosePath(context);
-        UIColor *color = [self.colors objectAtIndex:i];
-        CGContextSetStrokeColorWithColor(context, [color CGColor]);
-        CGContextSetFillColorWithColor(context, [color CGColor]);
-        CGContextDrawPath(context, kCGPathFillStroke);
-        
-        const BOOL drawUnitsAroundCircle = NO;
-        if(drawUnitsAroundCircle && i != 0){
-            CGContextSaveGState(context);
-            const CGFloat aqiStep = (maxAQI-minAQI) / numColorSegments;
-            NSString *unitString = [@(minAQI + aqiStep * i) stringValue];
-            
-            CGContextRotateCTM(context, segmentAngle0);
-            CGContextScaleCTM(context, 1, -1);
-            NSDictionary *unitAttributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:14], NSForegroundColorAttributeName: [UIColor grayColor]};
-            [unitString drawAtPoint:CGPointMake(R0, 0) withAttributes:unitAttributes];
-            CGContextRestoreGState(context);
         }
-        segmentAngle0 -= segmentAngleStep;
+    }
+
+    {//create aqiMarkLayer
+        self.aqiMarkLayer = [CAShapeLayer layer];
+        [self.layer addSublayer:self.aqiMarkLayer];
+        self.aqiMarkLayer.contentsScale = [[UIScreen mainScreen] scale];
+        self.aqiMarkLayer.fillColor = [[UIColor darkGrayColor] CGColor];
+//        self.aqiMarkLayer.borderColor = [[UIColor magentaColor] CGColor];
+//        self.aqiMarkLayer.borderWidth = 1.5;
     }
     
-    // Draw AQI value
-    if(_aqi != nil){
-        const CGFloat a = 0.707*R1; //inner rectange inside the inner circle
+    {//create aqiTextLayer
+        self.aqiTextLayer = [CATextLayer layer];
+        [self.layer addSublayer:self.aqiTextLayer];
+        self.aqiTextLayer.alignmentMode = kCAAlignmentCenter;
+        self.aqiTextLayer.contentsScale = [[UIScreen mainScreen] scale];
+        CGFontRef font = CGFontCreateWithFontName((__bridge CFStringRef)[UIFont boldSystemFontOfSize:32].fontName);
+        self.aqiTextLayer.font = font;
+        self.aqiTextLayer.fontSize = 24;
+        self.aqiTextLayer.foregroundColor = [[UIColor blueColor] CGColor];
+        self.aqiTextLayer.borderColor = [[UIColor redColor] CGColor];
+        self.aqiTextLayer.borderWidth = 0.25;
         
-        const NSString *aqiString = [_aqi stringValue];
-        const CGFloat desiredAQIFontSize = 48;
-        const CGFloat minAQIFontSize = 7;
-        //adjust font size so that: fontSize.width < 2*a && fontSize.height < 2*a
-        CGFloat fontSize = desiredAQIFontSize;
-        CGSize textSizeAQI;
-        NSDictionary *attributesAQI;
-        do{
-            attributesAQI = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:fontSize]};
-            textSizeAQI = [aqiString sizeWithAttributes:attributesAQI];
-            fontSize -= 1.0;
-        }while(fontSize>minAQIFontSize && (textSizeAQI.width>2*a || textSizeAQI.height>2*a));
-        
-        CGContextScaleCTM(context, 1, -1); //y- flip text
-        const UIColor *textColor = ({ //find color within which AQI is in.
-            const CGFloat aqiStep = (maxAQI-minAQI) / numColorSegments;
-            NSInteger segmentOfAQI = MIN([_aqi intValue]/aqiStep, numColorSegments-1);
-            self.colors[segmentOfAQI];
+        self.aqiTextLayer.string = @"n/a";
+    }
+    {//create aqiQuality layer
+        self.aqiQualityLayer = [CATextLayer layer];
+        [self.layer addSublayer:self.aqiQualityLayer];
+        self.aqiQualityLayer.alignmentMode = kCAAlignmentCenter;
+        self.aqiQualityLayer.contentsScale = [[UIScreen mainScreen] scale];
+        CGFontRef font = CGFontCreateWithFontName((__bridge CFStringRef)[UIFont boldSystemFontOfSize:16].fontName);
+        self.aqiQualityLayer.font = font;
+        self.aqiQualityLayer.fontSize = 16;
+        self.aqiQualityLayer.foregroundColor = [[UIColor colorWithWhite:0.1 alpha:1.0] CGColor];
+        self.aqiQualityLayer.borderColor = [[UIColor magentaColor] CGColor];
+        self.aqiQualityLayer.borderWidth = 0.25;
+        self.aqiQualityLayer.string = @"n/a";
+    }
+}
+
+-(void)layoutSublayersOfLayer:(CALayer *)layer
+{
+    [super layoutSublayersOfLayer:layer];
+//    NSLog(@"--ZZAQIDashBoardView2:: -layoutSublayersOfLayer! layer.frame=%@",NSStringFromCGRect(layer.frame));
+    
+    CGRect bounds = layer.bounds;
+    
+    
+    CGRect circleFrame = bounds;
+    circleFrame.size.width = MAX(0, MIN(bounds.size.width, bounds.size.height) - self.aqiMarkSize*2);
+    circleFrame.size.height = circleFrame.size.width;
+    circleFrame.origin.x = (bounds.size.width - circleFrame.size.width)/2;
+    circleFrame.origin.y = (bounds.size.height - circleFrame.size.height)/2;
+    
+    [self _layoutColoredSegmentLayersWithFrame:circleFrame];
+    [self _layoutAQIMarkLayerWithFrame:circleFrame];
+    
+    
+    CGFloat aqiTextSize = (MIN(circleFrame.size.width, circleFrame.size.height) - self.circleWidth*2) * M_SQRT2/2; //0.707
+    CGRect aqiTextFrame;
+    aqiTextFrame.size.width = MAX(0, aqiTextSize);
+//    aqiTextFrame.size.height = MAX(0, aqiTextSize);
+    aqiTextFrame.size.height = ({
+        CGFontRef font = (CGFontRef)self.aqiTextLayer.font;
+        CGFloat fontSize = self.aqiTextLayer.fontSize;
+        int units = CGFontGetUnitsPerEm(font);
+        CGFloat fontHeight = fontSize*CGFontGetFontBBox(font).size.height/units;
+        fontHeight;
+    }); //only valid when CATextLayer.string is NOT of NSAttributedString
+    aqiTextFrame.origin.x = (bounds.size.width - aqiTextFrame.size.width)/2;
+    aqiTextFrame.origin.y = (bounds.size.height - aqiTextFrame.size.height)/2;
+    [self _layoutAQITextLayerWithFrame:aqiTextFrame];
+    
+    CGRect aqiQualityFrame;
+    aqiQualityFrame.size.width = aqiTextFrame.size.width;
+    aqiQualityFrame.size.height = self.circleWidth;
+    aqiQualityFrame.origin.x = aqiTextFrame.origin.x;
+    aqiQualityFrame.origin.y = aqiTextFrame.origin.y+aqiTextFrame.size.height;
+    [self _layoutAQIQualityLayerWithFrame:aqiQualityFrame];
+}
+
+-(void)setAQI:(NSNumber *)aqiIndex quality:(NSString *)quality pm25:(NSString *)pm25 pm10:(NSString *)pm10
+{
+    CGFloat aqiValue = [aqiIndex floatValue];
+//    NSLog(@"--ZZAQIDashBoardView:: setAQI:%@ quality:pm25:pm10:!", @(aqiValue));
+    
+    _aqiValue = aqiValue;
+    //set AQI text
+    {//TODO: animate aqi value
+        NSString *aqiValueString = [NSString stringWithFormat:@"%.0f", aqiValue];
+        self.aqiTextLayer.string = aqiValueString;
+    }
+    {
+        self.aqiQualityLayer.string = quality;
+    }
+    //animate AQI value for AQI mark layer
+    [self _animateAQIMark:aqiValue];
+}
+
+-(void)setCircleWidth:(CGFloat)circleWidth
+{
+    _circleWidth = circleWidth;
+    [self layoutSublayersOfLayer:self.layer];
+}
+
+-(void)setBlankAngle:(CGFloat)blankAngle
+{
+    _blankAngle = blankAngle;
+    [self layoutSublayersOfLayer:self.layer];
+}
+
+-(void) _layoutColoredSegmentLayersWithFrame:(CGRect)frame
+{
+    self.coloredSegmentLayer.frame = frame;
+    
+    NSUInteger numColors = [self.colors count];
+    CGPoint center = CGPointMake(frame.size.width/2, frame.size.height/2);
+    CGFloat radius = MIN(frame.size.width, frame.size.height)/2 - self.circleWidth/2;
+    CGFloat remainingAngle = 2*M_PI - self.blankAngle; //360-A/2
+    CGFloat deltaAngle = remainingAngle / numColors;
+    CGFloat startAngle0 = M_PI/2 + self.blankAngle/2; //M_PI/2 + A/2
+    for(NSUInteger i=0; i<numColors; i++){
+//        CAShapeLayer *shapeLayer = [CAShapeLayer layer];
+//        [self.coloredSegmentLayer addSublayer:shapeLayer];
+        CAShapeLayer *shapeLayer = (CAShapeLayer *) [[self.coloredSegmentLayer sublayers] objectAtIndex:i];
+        shapeLayer.frame = CGRectMake(0, 0, frame.size.width, frame.size.height); //adapt when size changed
+        shapeLayer.path = ({
+            CGFloat startAngle = startAngle0 + i*deltaAngle;
+            CGFloat endAngle = startAngle + deltaAngle;
+            UIBezierPath *path = [UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:startAngle endAngle:endAngle clockwise:YES];
+            [path CGPath];
         });
-        
-        [aqiString drawAtPoint:CGPointMake(x0-textSizeAQI.width/2, y0-textSizeAQI.height/2) withAttributes:
-         @{NSFontAttributeName: [UIFont boldSystemFontOfSize:fontSize], NSForegroundColorAttributeName: textColor}];
-
-        if(_quality != nil){
-            NSDictionary *attributesQuality = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:18], NSForegroundColorAttributeName: [UIColor lightGrayColor]};
-            CGSize textSizeQuality = [_quality sizeWithAttributes:attributesQuality];
-            CGFloat vPadding = 0;
-            [_quality drawAtPoint:CGPointMake(x0-textSizeQuality.width/2, y0+textSizeAQI.height/2+textSizeQuality.height/2+vPadding) withAttributes:attributesQuality];
-        }
-        
-        //draw indicator around outer circle
-        {
-            CGFloat aqi = MIN(MAX(minAQI, [_aqi floatValue]), maxAQI); //clamp to [minAQI, maxAQI]
-            CGFloat A0 = (1.5*M_PI - halfAngle);
-            CGFloat A1 = (-M_PI/2 + halfAngle);
-            CGFloat indicatorAngleForAQI = (aqi - minAQI)/(maxAQI - minAQI) * (A1-A0) + A0;
-            CGContextScaleCTM(context, 1, -1);
-            CGContextRotateCTM(context, indicatorAngleForAQI);
-            
-            CGContextSetFillColorWithColor(context, [[UIColor lightGrayColor] CGColor]);
-            CGContextMoveToPoint(context, R0, 0);
-            CGContextAddLineToPoint(context, R0 + indicatorSize, indicatorSize);
-            CGContextAddLineToPoint(context, R0 + indicatorSize, -indicatorSize);
-            CGContextClosePath(context);
-            CGContextFillPath(context);
-            
-            CGContextMoveToPoint(context, R1, 0);
-            CGContextAddLineToPoint(context, R1 - indicatorSize, indicatorSize);
-            CGContextAddLineToPoint(context, R1 - indicatorSize, -indicatorSize);
-            CGContextClosePath(context);
-            CGContextFillPath(context);
-        }
     }
 }
 
--(CGSize)intrinsicContentSize
+-(void) _layoutAQIMarkLayerWithFrame:(CGRect)frame
 {
-    CGFloat intrinsicInnerCircleRadius = 80;
-    CGFloat size = (intrinsicInnerCircleRadius + self.width + self.indicatorSize+ self.margin) * 2;
-    return CGSizeMake(size, size);
-//    return CGSizeMake(250, 250);
-//    return CGSizeMake(UIViewNoIntrinsicMetric, UIViewNoIntrinsicMetric);
+    self.aqiMarkLayer.frame = frame;
+    CGFloat x0 = frame.size.width/2;
+    CGFloat y0 = frame.size.height/2;
+//    CGFloat R0 = MIN(frame.size.width, frame.size.height)/2 - 2*self.aqiMarkSize;
+    CGFloat R0 = MIN(frame.size.width, frame.size.height)/2;
+    CGFloat R1 = R0 - self.circleWidth;
+
+    self.aqiMarkLayer.path = ({
+        UIBezierPath *path = [UIBezierPath bezierPath];
+        CGFloat remainingAngle = 2*M_PI - self.blankAngle;
+        CGFloat A0 = M_PI/2 + self.blankAngle/2;
+        CGFloat A1 = A0 + remainingAngle;
+        CGFloat Q0 = _minAQIValue;
+        CGFloat Q1 = _maxAQIValue;
+//        CGFloat q = self.aqiValue;
+        CGFloat q = Q0; //initial AQI mark position
+        CGFloat a = (q-Q0)/(Q1-Q0) * (A1-A0) + A0;  //calculate a from q, a∈[A0, A1]
+        CGFloat angle = a;
+        [path moveToPoint:CGPointMake(x0 + R0*cos(angle), y0 + R0*sin(angle))];
+        CGFloat S = self.aqiMarkSize;
+        CGFloat R01 = R0 + S;
+//        CGFloat B1 = atan(S*tan(30.0*M_PI/180) / R01);
+        CGFloat B1 = atan(S / R01);
+        [path addLineToPoint:CGPointMake(x0 + R01*cos(angle+B1), y0 + R01*sin(angle+B1))];
+        [path addLineToPoint:CGPointMake(x0 + R01*cos(angle-B1), y0 + R01*sin(angle-B1))];
+        [path closePath];
+        
+        [path moveToPoint:CGPointMake(x0 + R1*cos(angle), y0 + R1*sin(angle))];
+        CGFloat R11 = R1 - S;
+        CGFloat B2 = atan(S / R11);
+        [path addLineToPoint:CGPointMake(x0 + R11*cos(angle+B2), y0+R11*sin(angle+B2))];
+        [path addLineToPoint:CGPointMake(x0 + R11*cos(angle-B2), y0+R11*sin(angle-B2))];
+        [path closePath];
+        
+        [path CGPath];
+    });
+}
+
+-(void) _layoutAQITextLayerWithFrame:(CGRect)frame
+{
+//    NSLog(@"--ZZAQIDashBoardView2:: _rebuildAQITextLayerWithFrame:%@!", NSStringFromCGRect(frame));
+    self.aqiTextLayer.frame = frame;
+
+}
+
+-(void) _layoutAQIQualityLayerWithFrame:(CGRect)frame
+{
+    self.aqiQualityLayer.frame = frame;
+}
+
+-(void) _animateAQIMark:(CGFloat)aqiValue
+{
+    CGFloat remainingAngle = 2*M_PI - self.blankAngle;
+//    CGFloat A0 = 0;
+    CGFloat A1 = remainingAngle;
+    CGFloat Q0 = _minAQIValue;
+    CGFloat Q1 = _maxAQIValue;
+    CGFloat angle = (aqiValue-Q0)/(Q1-Q0) * A1;  //calculate angle from q, a∈[A0, A1], q∈[minAQI, maxAQI]
+    angle = MAX(0, MIN(angle, A1));
+    
+    CAKeyframeAnimation *anim = [CAKeyframeAnimation animationWithKeyPath:@"transform.rotation.z"];
+    anim.values = ({
+        NSArray<NSNumber *> *angleRatios = @[@(0.0), @(0.15), @(0.25), @(0.5), @(0.75), @(1.35), @(0.65), @(1.25), @(0.75), @(1.15), @(0.85), @(1.05), @(0.97), @(1.03), @(0.99), @(1.01), @(1.0)];
+        NSMutableArray<id> *transforms = [NSMutableArray array];
+        for(NSNumber *a in angleRatios){
+            CGFloat angleRatio = [a floatValue];
+            [transforms addObject:@(angleRatio*angle)];
+        }
+        transforms;
+    });
+    anim.duration = 0.6;
+    anim.removedOnCompletion = NO;
+    anim.fillMode = kCAFillModeForwards;
+//    anim.delegate = self;
+    [self.aqiMarkLayer addAnimation:anim forKey:@"transform"];
+
+//    NSLog(@"--ZZAQIDashBoardView2:: _animateAQIMark:! aqiValue=%@, angle=%@", @(aqiValue), @(angle*180/M_PI));
+    
 }
 
 @end

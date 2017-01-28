@@ -17,8 +17,9 @@ typedef NS_ENUM (NSInteger, ZZGradientColoredViewDirection){
 IB_DESIGNABLE
 @interface ZZGradientColoredView : UIView
 
-@property(readwrite) IBInspectable ZZGradientColoredViewDirection direction;
-@property(readwrite) IBInspectable UIColor *colorStart;
-@property(readwrite) IBInspectable UIColor *colorEnd;
+@property(readwrite, nonatomic) IBInspectable ZZGradientColoredViewDirection direction;
+
+@property(readwrite, nonatomic) IBInspectable UIColor *colorStart;
+@property(readwrite, nonatomic) IBInspectable UIColor *colorEnd;
 
 @end

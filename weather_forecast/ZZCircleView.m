@@ -10,6 +10,11 @@
 
 @implementation ZZCircleView
 
++(Class)layerClass
+{
+    return [CAShapeLayer class];
+}
+
 -(instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -25,10 +30,9 @@
 
 -(void)_initView
 {
-    self.color = [UIColor grayColor]; //default color
-    self.opaque = NO; //imporant: set either .opaque or .self.clearsContextBeforeDrawing property to NO.
-    //    self.clearsContextBeforeDrawing = NO;
-    //    self.backgroundColor = [UIColor clearColor];
+    self.layer.opaque = NO;
+    [self setColor:[UIColor grayColor]]; //default circle color
+
 }
 
 //-(void)setBackgroundColor:(UIColor *)backgroundColor
@@ -36,19 +40,26 @@
 //    [super setBackgroundColor:[UIColor clearColor]];
 //}
 
-
--(void)drawRect:(CGRect)rect
+-(void)setColor:(UIColor *)color
 {
-    CGSize size = rect.size;
-    const CGFloat lineWidth = size.width > 60 ? 6 : 4;
-    
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    
-    CGFloat r = MIN(size.width, size.height)/2;
-    CGContextAddArc(context, r, r, r-lineWidth/2, 0, 2*M_PI, 0);
-    CGContextSetStrokeColorWithColor(context, [self.color CGColor]);
-    CGContextSetLineWidth(context, lineWidth);
-    CGContextStrokePath(context);
+    _color = color;
+    CAShapeLayer *shapeLayer = (CAShapeLayer *)self.layer;
+    shapeLayer.strokeColor = [color CGColor];
+    shapeLayer.fillColor = [[UIColor clearColor] CGColor];
+}
+
+-(void)layoutSublayersOfLayer:(CALayer *)layer
+{
+    [super layoutSublayersOfLayer:layer];
+    CGRect bounds = layer.bounds;
+    CAShapeLayer *shapeLayer = (CAShapeLayer *)self.layer;
+    shapeLayer.path = ({
+        CGFloat d = MIN(bounds.size.width, bounds.size.height);
+        [[UIBezierPath bezierPathWithOvalInRect:CGRectMake(0, 0, d, d)] CGPath];
+
+    });
+    const CGFloat lineWidth = bounds.size.width > 60 ? 6 : 4;
+    shapeLayer.lineWidth = lineWidth;
 }
 
 @end

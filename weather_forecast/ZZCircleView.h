@@ -15,6 +15,6 @@ IB_DESIGNABLE
  * circle border color.
  * Default: lightGray
  */
-@property(readwrite) IBInspectable UIColor *color;
+@property(readwrite, nonatomic) IBInspectable UIColor *color;
 
 @end

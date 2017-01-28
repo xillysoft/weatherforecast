@@ -9,6 +9,12 @@
 #import "ZZGradientColoredView.h"
 
 @implementation ZZGradientColoredView
+
++(Class)layerClass
+{
+    return [CAGradientLayer class];
+}
+
 -(instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -25,9 +31,49 @@
 
 -(void)_setupView
 {
-    self.direction = ZZGradientColoredViewDirectionAutomatical;
+    self.direction = ZZGradientColoredViewDirectionVertical; //default direction
+    self.colorStart = [UIColor redColor]; //default start and end color
+    self.colorEnd = [UIColor blueColor];
 }
 
+-(void)setDirection:(ZZGradientColoredViewDirection)direction
+{
+    _direction = direction;
+    
+    if(direction == ZZGradientColoredViewDirectionAutomatical){
+        CGRect bounds = self.layer.bounds;
+        direction = bounds.size.width > bounds.size.height ? ZZGradientColoredViewDirectionHorizontal : ZZGradientColoredViewDirectionVertical;
+    }
+    CAGradientLayer *gradient = (CAGradientLayer *)[self layer];
+    if(direction == ZZGradientColoredViewDirectionVertical){
+        gradient.startPoint = CGPointMake(0.5, 0.0);
+        gradient.endPoint = CGPointMake(0.5, 1.0);
+    }else{
+        gradient.startPoint = CGPointMake(0.0, 0.5);
+        gradient.endPoint = CGPointMake(1.0, 0.5);
+    }
+}
+
+-(void)setColorStart:(UIColor *)colorStart
+{
+    _colorStart = colorStart;
+    
+    CAGradientLayer *gradient = (CAGradientLayer *)[self layer];
+    if(self.colorStart && self.colorEnd){
+        gradient.colors = @[(id)[self.colorStart CGColor], (id)[self.colorEnd CGColor]];
+    }
+}
+-(void)setColorEnd:(UIColor *)colorEnd
+{
+    _colorEnd = colorEnd;
+    
+    CAGradientLayer *gradient = (CAGradientLayer *)[self layer];
+    if(self.colorStart && self.colorEnd){
+        gradient.colors = @[(id)[self.colorStart CGColor], (id)[self.colorEnd CGColor]];
+    }
+}
+
+/*
 -(void)drawRect:(CGRect)rect
 {
     CGContextRef context = UIGraphicsGetCurrentContext();
@@ -65,13 +111,6 @@
     CFRelease(colors);
     CGColorSpaceRelease(colorSpace);
     
-}
-
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
 }
 */
 

@@ -10,4 +10,6 @@
 
 @interface TestViewController : UIViewController
 
+-(void)showWeatherWithCityId:(NSString *)cityId cityName:(NSString *)cityName;
+
 @end

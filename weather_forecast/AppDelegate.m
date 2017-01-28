@@ -9,7 +9,7 @@
 #import "AppDelegate.h"
 #import "ViewController.h"
 #import "ZZCityListViewController.h"
-
+#import "TestViewController.h"
 
 @interface AppDelegate ()
 
@@ -19,10 +19,18 @@
 
 -(void)cityDidSelectWithId:(NSString *)cityId cityName:(NSString *)cityName
 {
-    ViewController *viewController = [[ViewController alloc] init];
-    [viewController setCityId:cityId];
-    [viewController setCityName:cityName];
-    [self.window.rootViewController showViewController:viewController sender:self];
+    BOOL TEST = YES;
+    
+    if(TEST){
+        TestViewController *testViewController = [[TestViewController alloc] init];
+        [testViewController showWeatherWithCityId:cityId cityName:cityName];
+        [self.window.rootViewController showViewController:testViewController sender:self];
+    }else{
+        ViewController *viewController = [[ViewController alloc] init];
+        [viewController setCityId:cityId];
+        [viewController setCityName:cityName];
+        [self.window.rootViewController showViewController:viewController sender:self];
+    }
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
@@ -33,10 +41,10 @@
     self.window.backgroundColor = [UIColor whiteColor];
     
 //    ViewController *viewController = [[ViewController alloc] init];
-    ZZCityListViewController *viewController = [[ZZCityListViewController alloc] init];
-    viewController.delegate = self;
+    ZZCityListViewController *cityListViewController = [[ZZCityListViewController alloc] init];
+    cityListViewController.delegate = self;
     
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:cityListViewController];
     [navigationController setNavigationBarHidden:YES];
     [self.window setRootViewController:navigationController];
     [self.window makeKeyAndVisible];

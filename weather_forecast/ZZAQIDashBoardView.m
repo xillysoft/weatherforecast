@@ -23,7 +23,7 @@
 @end
 
 
-@implementation ZZAQIDashBoardView2
+@implementation ZZAQIDashBoardView
 
 -(instancetype)initWithCoder:(NSCoder *)aDecoder
 {
@@ -102,8 +102,8 @@
         self.aqiTextLayer.font = font;
         self.aqiTextLayer.fontSize = 24;
         self.aqiTextLayer.foregroundColor = [[UIColor blueColor] CGColor];
-        self.aqiTextLayer.borderColor = [[UIColor redColor] CGColor];
-        self.aqiTextLayer.borderWidth = 0.25;
+//        self.aqiTextLayer.borderColor = [[UIColor redColor] CGColor];
+//        self.aqiTextLayer.borderWidth = 0.25;
         
         self.aqiTextLayer.string = @"n/a";
     }
@@ -116,8 +116,8 @@
         self.aqiQualityLayer.font = font;
         self.aqiQualityLayer.fontSize = 16;
         self.aqiQualityLayer.foregroundColor = [[UIColor colorWithWhite:0.1 alpha:1.0] CGColor];
-        self.aqiQualityLayer.borderColor = [[UIColor magentaColor] CGColor];
-        self.aqiQualityLayer.borderWidth = 0.25;
+//        self.aqiQualityLayer.borderColor = [[UIColor magentaColor] CGColor];
+//        self.aqiQualityLayer.borderWidth = 0.25;
         self.aqiQualityLayer.string = @"n/a";
     }
 }

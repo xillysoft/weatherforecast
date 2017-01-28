@@ -10,5 +10,5 @@
 #import "ZZWeatherDataProvider.h"
 
 @interface ZZWeatherForecastGraphView : UIView
--(void)weatherDataDidReceivDaylyForecast:(NSArray *)dailyForecast sender:(ZZWeatherDataProvider *)sender;
+-(void)setWeatherDailyForecastData:(NSArray *)dailyForecast;
 @end

@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import "ZZWeatherDataProvider.h"
 #import "ZZWeatherNowView.h"
+#import "ZZAQIDashBoardView.h"
 #import "ZZForecastView.h"
 #import "ZZGradientColoredView.h"
 
@@ -25,6 +26,8 @@
 @property UIActivityIndicatorView *activityIndicatorView;
 
 @property ZZWeatherNowView *weatherNowView;
+@property ZZAQIDashBoardView *aqiDashBoardView;
+
 @property NSMutableArray<ZZForecastView *> *forecastViews;
 @property NSMutableArray<ZZGradientColoredView *> *connectionLineViews;
 
@@ -45,6 +48,9 @@
     
     self.weatherNowView = [[ZZWeatherNowView alloc] initWithFrame:CGRectZero];
     [scrollView addSubview:self.weatherNowView];
+    
+    self.aqiDashBoardView = [[ZZAQIDashBoardView alloc] initWithFrame:CGRectZero];
+    [scrollView addSubview:self.aqiDashBoardView];
     
     int numForecasts = 7;
     self.forecastViews = [NSMutableArray array];
@@ -85,8 +91,10 @@
 //    self.activityIndicatorView.color = [UIColor blueColor];
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
+-(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+//- (void)viewDidLoad {
+//    [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     NSString *authKey = @"abb4394c4a8441159cd794ecaa7b5ef2";
     NSString *cityId = self.cityId ? self.cityId : @"CN101080101";
@@ -108,10 +116,26 @@
         _topLayoutConstraint = [NSLayoutConstraint constraintWithItem:self.weatherNowView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.weatherNowView.superview attribute:NSLayoutAttributeTop multiplier:1.0 constant:0];
         [self.view addConstraint:_topLayoutConstraint];
         
-        //self.weatherNowView.centerX = superview.centerX
-        //self.weatherNowView.width = superview.width
-        [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.weatherNowView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.weatherNowView.superview attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
-        [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.weatherNowView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.weatherNowView.superview attribute:NSLayoutAttributeWidth multiplier:1.0 constant:0]];
+        //self.weatherNowView.left = superview.left
+        //self.weatherNowView.width = superview.width*0.1 //TODO::
+        [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.weatherNowView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.weatherNowView.superview attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
+        [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.weatherNowView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.weatherNowView.superview attribute:NSLayoutAttributeWidth multiplier:0.1 constant:0]];
+
+        self.aqiDashBoardView.translatesAutoresizingMaskIntoConstraints = NO;
+        //self.aqiDashBoardView.left = self.weatherNowView.right
+        //self.aqiDashBoardView.width = superview.width*0.9 //TODO:: S
+        //self.aqiDashBoardView.top = self.weatherNowView.top
+        //self.aqiDashBoardView.height = self.weatherNowView.height
+        //self.aqiDashBoardView.height ≥ 240
+        [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.aqiDashBoardView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.weatherNowView attribute:NSLayoutAttributeRight multiplier:1.0 constant:0.0]];
+        [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.aqiDashBoardView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.aqiDashBoardView.superview attribute:NSLayoutAttributeWidth multiplier:0.9 constant:0.0]];
+        [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.aqiDashBoardView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.weatherNowView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0]];
+        [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.aqiDashBoardView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.weatherNowView attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0.0]];
+        [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.aqiDashBoardView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:nil attribute:0 multiplier:1.0 constant:240]];
+
+        
+
+        
         
         const CGFloat paddingBetweenForecastViews = 30;
         
@@ -241,7 +265,9 @@
     NSString *aqiQuality = [aqi objectForKey:@"qlty"];
     NSString *aqiPM25 = [aqi objectForKey:@"pm25"];
     NSString *aqiPM10 = [aqi objectForKey:@"pm10"];
+    
     [self.weatherNowView setAQI:aqiIndex quality:aqiQuality pm25:aqiPM25 pm10:aqiPM10];
+    [self.aqiDashBoardView setAQI:aqiIndex quality:aqiQuality pm25:aqiPM25 pm10:aqiPM10];
 }
 -(void)weatherDataDidReceivSuggestion:(NSDictionary *)suggestion sender:(ZZWeatherDataProvider *)sender
 {

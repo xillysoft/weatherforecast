@@ -33,7 +33,7 @@
                     </constraints>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="number" keyPath="aqiValue">
-                            <real key="value" value="0.0"/>
+                            <real key="value" value="999"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </view>

@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6116BE3C1DD4694400270CB2 /* ZZAQIDashBoardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6116BE3B1DD4694400270CB2 /* ZZAQIDashBoardView.m */; };
 		6116BE3E1DD46F4400270CB2 /* View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6116BE3D1DD46F4400270CB2 /* View.xib */; };
 		6116BE411DD74C3900270CB2 /* TestView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6116BE401DD74C3900270CB2 /* TestView.m */; };
 		6116BE441DD80F5E00270CB2 /* test.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6116BE431DD80F5E00270CB2 /* test.jpg */; };
+		6122849C1E2E218500F901BA /* TestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6122849B1E2E218500F901BA /* TestViewController.m */; };
 		612E8F2C1DD0C89200B09663 /* ZZGradientColoredView.m in Sources */ = {isa = PBXBuildFile; fileRef = 612E8F2B1DD0C89200B09663 /* ZZGradientColoredView.m */; };
 		612FA56C1DC3452500648D17 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 612FA56B1DC3452500648D17 /* main.m */; };
 		612FA56F1DC3452500648D17 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 612FA56E1DC3452500648D17 /* AppDelegate.m */; };
@@ -82,16 +82,18 @@
 		612FA6181DCC76EC00648D17 /* ZZForecastView.m in Sources */ = {isa = PBXBuildFile; fileRef = 612FA6171DCC76EC00648D17 /* ZZForecastView.m */; };
 		612FA61D1DCC78AA00648D17 /* ZZCircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 612FA61C1DCC78AA00648D17 /* ZZCircleView.m */; };
 		612FA6211DCDE0D600648D17 /* icon_humidity_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 612FA6201DCDE0D600648D17 /* icon_humidity_1.png */; };
-		61ED48D11E2CD4DC00E27111 /* ZZAQIDashBoardView2.m in Sources */ = {isa = PBXBuildFile; fileRef = 61ED48D01E2CD4DC00E27111 /* ZZAQIDashBoardView2.m */; };
+		6143003A1E31BC7A001CD3A1 /* ZZWeatherForecastGraphView.m in Sources */ = {isa = PBXBuildFile; fileRef = 614300391E31BC7A001CD3A1 /* ZZWeatherForecastGraphView.m */; };
+		6143003C1E31E9DC001CD3A1 /* test.json in Resources */ = {isa = PBXBuildFile; fileRef = 6143003B1E31E9DC001CD3A1 /* test.json */; };
+		61ED48D11E2CD4DC00E27111 /* ZZAQIDashBoardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 61ED48D01E2CD4DC00E27111 /* ZZAQIDashBoardView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		6116BE3A1DD4694400270CB2 /* ZZAQIDashBoardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZZAQIDashBoardView.h; sourceTree = "<group>"; };
-		6116BE3B1DD4694400270CB2 /* ZZAQIDashBoardView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZZAQIDashBoardView.m; sourceTree = "<group>"; };
 		6116BE3D1DD46F4400270CB2 /* View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = View.xib; sourceTree = "<group>"; };
 		6116BE3F1DD74C3900270CB2 /* TestView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestView.h; sourceTree = "<group>"; };
 		6116BE401DD74C3900270CB2 /* TestView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestView.m; sourceTree = "<group>"; };
 		6116BE431DD80F5E00270CB2 /* test.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = test.jpg; sourceTree = "<group>"; };
+		6122849A1E2E218500F901BA /* TestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestViewController.h; sourceTree = "<group>"; };
+		6122849B1E2E218500F901BA /* TestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestViewController.m; sourceTree = "<group>"; };
 		612E8F2A1DD0C89200B09663 /* ZZGradientColoredView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZZGradientColoredView.h; sourceTree = "<group>"; };
 		612E8F2B1DD0C89200B09663 /* ZZGradientColoredView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZZGradientColoredView.m; sourceTree = "<group>"; };
 		612FA5671DC3452500648D17 /* weather_forecast.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = weather_forecast.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -174,8 +176,11 @@
 		612FA61B1DCC78AA00648D17 /* ZZCircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZZCircleView.h; sourceTree = "<group>"; };
 		612FA61C1DCC78AA00648D17 /* ZZCircleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZZCircleView.m; sourceTree = "<group>"; };
 		612FA6201DCDE0D600648D17 /* icon_humidity_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_humidity_1.png; sourceTree = "<group>"; };
-		61ED48CF1E2CD4DC00E27111 /* ZZAQIDashBoardView2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZZAQIDashBoardView2.h; sourceTree = "<group>"; };
-		61ED48D01E2CD4DC00E27111 /* ZZAQIDashBoardView2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZZAQIDashBoardView2.m; sourceTree = "<group>"; };
+		614300381E31BC7A001CD3A1 /* ZZWeatherForecastGraphView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZZWeatherForecastGraphView.h; sourceTree = "<group>"; };
+		614300391E31BC7A001CD3A1 /* ZZWeatherForecastGraphView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZZWeatherForecastGraphView.m; sourceTree = "<group>"; };
+		6143003B1E31E9DC001CD3A1 /* test.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = test.json; sourceTree = "<group>"; };
+		61ED48CF1E2CD4DC00E27111 /* ZZAQIDashBoardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZZAQIDashBoardView.h; sourceTree = "<group>"; };
+		61ED48D01E2CD4DC00E27111 /* ZZAQIDashBoardView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZZAQIDashBoardView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -221,8 +226,11 @@
 				612FA5811DC3465900648D17 /* weather */,
 				612FA56D1DC3452500648D17 /* AppDelegate.h */,
 				612FA56E1DC3452500648D17 /* AppDelegate.m */,
+				6143003B1E31E9DC001CD3A1 /* test.json */,
 				612FA5701DC3452500648D17 /* ViewController.h */,
 				612FA5711DC3452500648D17 /* ViewController.m */,
+				6122849A1E2E218500F901BA /* TestViewController.h */,
+				6122849B1E2E218500F901BA /* TestViewController.m */,
 				612FA5761DC3452500648D17 /* Assets.xcassets */,
 				612FA5781DC3452500648D17 /* LaunchScreen.storyboard */,
 				612FA57B1DC3452500648D17 /* Info.plist */,
@@ -270,10 +278,10 @@
 				612FA6141DCC76BE00648D17 /* ZZForecastView.xib */,
 				612FA6161DCC76EC00648D17 /* ZZForecastView.h */,
 				612FA6171DCC76EC00648D17 /* ZZForecastView.m */,
-				6116BE3A1DD4694400270CB2 /* ZZAQIDashBoardView.h */,
-				6116BE3B1DD4694400270CB2 /* ZZAQIDashBoardView.m */,
-				61ED48CF1E2CD4DC00E27111 /* ZZAQIDashBoardView2.h */,
-				61ED48D01E2CD4DC00E27111 /* ZZAQIDashBoardView2.m */,
+				61ED48CF1E2CD4DC00E27111 /* ZZAQIDashBoardView.h */,
+				61ED48D01E2CD4DC00E27111 /* ZZAQIDashBoardView.m */,
+				614300381E31BC7A001CD3A1 /* ZZWeatherForecastGraphView.h */,
+				614300391E31BC7A001CD3A1 /* ZZWeatherForecastGraphView.m */,
 				6116BE3D1DD46F4400270CB2 /* View.xib */,
 				6116BE3F1DD74C3900270CB2 /* TestView.h */,
 				6116BE401DD74C3900270CB2 /* TestView.m */,
@@ -488,6 +496,7 @@
 				612FA5D61DC5A6C100648D17 /* 211.png in Resources */,
 				612FA5CF1DC5A6C100648D17 /* 204.png in Resources */,
 				6116BE3E1DD46F4400270CB2 /* View.xib in Resources */,
+				6143003C1E31E9DC001CD3A1 /* test.json in Resources */,
 				612FA5DE1DC5A6C100648D17 /* 305.png in Resources */,
 				612FA5F01DC5A6C100648D17 /* 501.png in Resources */,
 				612FA5C61DC5A6C100648D17 /* 100.png in Resources */,
@@ -512,17 +521,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6143003A1E31BC7A001CD3A1 /* ZZWeatherForecastGraphView.m in Sources */,
 				6116BE411DD74C3900270CB2 /* TestView.m in Sources */,
 				612FA5871DC35DAB00648D17 /* ZZWeather.m in Sources */,
+				6122849C1E2E218500F901BA /* TestViewController.m in Sources */,
 				612FA5841DC346A500648D17 /* ZZWeatherDataProvider.m in Sources */,
 				612FA61D1DCC78AA00648D17 /* ZZCircleView.m in Sources */,
 				612FA6181DCC76EC00648D17 /* ZZForecastView.m in Sources */,
 				612FA58C1DC36A7100648D17 /* ZZWeatherNowView.m in Sources */,
-				6116BE3C1DD4694400270CB2 /* ZZAQIDashBoardView.m in Sources */,
 				612FA5721DC3452500648D17 /* ViewController.m in Sources */,
 				612FA6041DCB187700648D17 /* ZZCityListViewController.m in Sources */,
 				612E8F2C1DD0C89200B09663 /* ZZGradientColoredView.m in Sources */,
-				61ED48D11E2CD4DC00E27111 /* ZZAQIDashBoardView2.m in Sources */,
+				61ED48D11E2CD4DC00E27111 /* ZZAQIDashBoardView.m in Sources */,
 				612FA56F1DC3452500648D17 /* AppDelegate.m in Sources */,
 				612FA56C1DC3452500648D17 /* main.m in Sources */,
 			);

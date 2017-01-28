@@ -222,7 +222,6 @@
     NSString *cityName = [cityInfo objectForKey:@"city"];
 //    NSLog(@"--City: %@ [%@] selected!", cityName, cityId);
     [self.delegate cityDidSelectWithId:cityId cityName:cityName];
-    
 }
 
 #pragma mark -
